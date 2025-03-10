@@ -16,10 +16,10 @@ class ScreenBackground extends StatelessWidget {
       children: [
         SvgPicture.asset(
           AssetsPath.splashBackgroundSvg,
-          width: double.maxFinite,
-          height: double.maxFinite,
+          width: double.infinity,
+          height: double.infinity,
           fit: BoxFit.fill,),
-        child,
+        SafeArea(child: child),
       ],
     );
   }
