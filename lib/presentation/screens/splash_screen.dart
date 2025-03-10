@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:to_do_application/core/constants/spacing.dart';
+import 'package:to_do_application/core/utils/assets_path.dart';
+import 'package:to_do_application/presentation/screens/login_screen.dart';
+import 'package:to_do_application/presentation/widgets/screen_background.dart';
+
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,25 +13,35 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
+  @override
+  void initState() {
+    super.initState();
+    _moveToNextScreen();
+  }
+
+  Future<void> _moveToNextScreen() async {
+    await Future.delayed(const Duration(seconds: 3));
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          SvgPicture.asset(
-            'assets/images/splash_screen_images/background.svg',
-            fit: BoxFit.fill,
+      body: ScreenBackground(
+        child: Center(
+          child: Image.asset(
+            AssetsPath.splashLogoPng,
+            width: AppSpacing.screenWidth(context) * 0.5,
+            height: AppSpacing.screenHeight(context) * 0.3,
+            fit: BoxFit.cover,
           ),
-          Center(
-            child: Image.asset(
-              'assets/images/splash_screen_images/logo.png',
-              width: AppSpacing.screenWidth(context) * 0.5,
-              height: AppSpacing.screenHeight(context) * 0.3,
-              fit: BoxFit.cover,
-            )
-          ),
-        ],
+        ),
       ),
     );
   }
 }
+
