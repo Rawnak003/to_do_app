@@ -1,36 +1,36 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
-import 'package:to_do_application/presentation/screens/reset_password_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
 import 'login_screen.dart';
 
-class ForgetPasswordPINVerifyScreen extends StatefulWidget {
-  const ForgetPasswordPINVerifyScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
-  State<ForgetPasswordPINVerifyScreen> createState() => _ForgetPasswordPINVerifyScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
-  final TextEditingController _pinInputTEController = TextEditingController();
+  final TextEditingController _newPasswordTEController = TextEditingController();
+  final TextEditingController _confirmNewPasswordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _onTapLogin(){
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
   }
 
-  void _onTapVerifyButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen()));
+  void _onTapSubmitButton(){
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
   }
 
   @override
   void dispose() {
-    _pinInputTEController.dispose();
+    _newPasswordTEController.dispose();
+    _confirmNewPasswordTEController.dispose();
     super.dispose();
   }
 
@@ -49,44 +49,31 @@ class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyS
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      AppStrings.pinVerification,
+                      AppStrings.setPassword,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      AppStrings.enterPinInstructions,
+                      AppStrings.resetPassInstructions,
                       textAlign: TextAlign.justify,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 28),
-                    PinCodeTextField(
-                      length: 6,
-                      obscureText: false,
-                      animationType: AnimationType.fade,
-                      keyboardType: TextInputType.number,
-                      pinTheme: PinTheme(
-                        shape: PinCodeFieldShape.box,
-                        borderRadius: BorderRadius.circular(5),
-                        fieldHeight: 50,
-                        fieldWidth: 45,
-                        activeFillColor: AppColor.whiteColor,
-                        inactiveFillColor: AppColor.whiteColor,
-                        selectedFillColor: AppColor.whiteColor,
-                        activeColor: AppColor.primaryColor,
-                        inactiveColor: AppColor.whiteColor,
-                        selectedColor: AppColor.secondaryColor,
-                      ),
-                      animationDuration: Duration(milliseconds: 300),
-                      backgroundColor: AppColor.backgroundColor,
-                      enableActiveFill: true,
-                      controller: _pinInputTEController,
-                      appContext: context,
+                    TextFormField(
+                      textInputAction: TextInputAction.next,
+                      controller: _newPasswordTEController,
+                      decoration: InputDecoration(hintText: AppStrings.newPassword),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: _confirmNewPasswordTEController,
+                      decoration: InputDecoration(hintText: AppStrings.confirmNewPassword),
                     ),
                     const SizedBox(height: 25),
                     ElevatedButton(
-                      onPressed: () => _onTapVerifyButton(),
+                      onPressed: () => _onTapSubmitButton(),
                       child: Text(
-                        AppStrings.verify,
+                        AppStrings.submit,
                         style: Theme.of(context).textTheme.labelMedium,
                       )
                     ),
