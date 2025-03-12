@@ -5,11 +5,11 @@ class AppButtonTheme {
   static ElevatedButtonThemeData buttonTheme(){
     return ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-          backgroundColor: AppColor.primaryColor,
-          foregroundColor: AppColor.whiteColor,
           fixedSize: const Size.fromWidth(double.maxFinite),
+          backgroundColor: AppColor.primaryColor,
+          foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(8)
           )
       ),
     );

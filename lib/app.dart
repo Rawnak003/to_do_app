@@ -3,6 +3,7 @@ import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/themes/button_theme.dart';
 import 'package:to_do_application/core/themes/input_decoration.dart';
+import 'package:to_do_application/core/themes/text_themes.dart';
 import 'package:to_do_application/presentation/screens/splash_screen.dart';
 
 class TaskManagerApp extends StatelessWidget {
@@ -17,21 +18,7 @@ class TaskManagerApp extends StatelessWidget {
         colorSchemeSeed: AppColor.primaryColor,
         inputDecorationTheme: AppInputDecoration.inputDecoration(),
         elevatedButtonTheme: AppButtonTheme.buttonTheme(),
-        textTheme: const TextTheme(
-          titleMedium: TextStyle(
-            color: Colors.grey,
-            fontSize: 24,
-          ),
-          titleSmall: TextStyle(
-            color: AppColor.primaryColor,
-            fontSize: 16,
-          ),
-          headlineMedium: TextStyle(
-            color: AppColor.blackColor,
-            fontWeight: FontWeight.w600,
-            fontSize: 32,
-          )
-        ),
+        textTheme: AppTextTheme.appTextTheme(),
       ),
       home: SplashScreen(),
     );
