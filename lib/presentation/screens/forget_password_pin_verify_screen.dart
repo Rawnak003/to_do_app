@@ -1,35 +1,31 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
-import 'forget_password_pin_verify_screen.dart';
 import 'login_screen.dart';
 
-class ForgetPasswordScreen extends StatefulWidget {
-  const ForgetPasswordScreen({super.key});
+class ForgetPasswordPINVerifyScreen extends StatefulWidget {
+  const ForgetPasswordPINVerifyScreen({super.key});
 
   @override
-  State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();
+  State<ForgetPasswordPINVerifyScreen> createState() => _ForgetPasswordPINVerifyScreenState();
 }
 
-class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyScreen> {
 
-  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _pinInputTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _onTapLogin(){
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
   }
 
-  void _onTapNextButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPasswordPINVerifyScreen()));
-  }
-
   @override
   void dispose() {
-    _emailTEController.dispose();
+    _pinInputTEController.dispose();
     super.dispose();
   }
 
@@ -48,29 +44,46 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      AppStrings.yourEmail,
+                      AppStrings.pinVerification,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      AppStrings.forgetPassInstructions,
+                      AppStrings.enterPinInstructions,
                       textAlign: TextAlign.justify,
                       style: Theme.of(context).textTheme.headlineSmall,
                     ),
                     const SizedBox(height: 28),
-                    TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailTEController,
-                      decoration: InputDecoration(hintText: AppStrings.email),
+                    PinCodeTextField(
+                      length: 6,
+                      obscureText: false,
+                      animationType: AnimationType.fade,
+                      keyboardType: TextInputType.number,
+                      pinTheme: PinTheme(
+                        shape: PinCodeFieldShape.box,
+                        borderRadius: BorderRadius.circular(5),
+                        fieldHeight: 50,
+                        fieldWidth: 45,
+                        activeFillColor: AppColor.whiteColor,
+                        inactiveFillColor: AppColor.whiteColor,
+                        selectedFillColor: AppColor.whiteColor,
+                        activeColor: AppColor.primaryColor,
+                        inactiveColor: AppColor.whiteColor,
+                        selectedColor: AppColor.secondaryColor,
+                      ),
+                      animationDuration: Duration(milliseconds: 300),
+                      backgroundColor: AppColor.backgroundColor,
+                      enableActiveFill: true,
+                      controller: _pinInputTEController,
+                      appContext: context,
                     ),
                     const SizedBox(height: 25),
                     ElevatedButton(
-                      onPressed: () => _onTapNextButton(),
-                      child: const Icon(
-                        Icons.arrow_circle_right_outlined,
-                        size: 32,
-                        color: AppColor.whiteColor,
-                      ),
+                      onPressed: () {},
+                      child: Text(
+                        AppStrings.verify,
+                        style: Theme.of(context).textTheme.labelMedium,
+                      )
                     ),
                     const SizedBox(height: 45),
                     RichText(text: TextSpan(children: [
