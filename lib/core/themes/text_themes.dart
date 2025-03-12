@@ -11,6 +11,7 @@ class AppTextTheme {
         fontWeight: FontWeight.w600,
         fontSize: 32,
       ),
+      headlineSmall: TextStyle(color: AppColor.whiteColor, fontSize: 16),
     );
   }
 }

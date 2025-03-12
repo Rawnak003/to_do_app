@@ -5,6 +5,8 @@ import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/presentation/screens/register_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
+import 'forget_pass_screen.dart';
+
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -24,7 +26,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   }
 
-  void _onTapForgetPassword(){}
+  void _onTapForgetPassword(){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPasswordScreen()));
+  }
 
   @override
   void dispose() {
