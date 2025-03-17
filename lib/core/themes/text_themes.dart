@@ -4,16 +4,12 @@ import 'package:to_do_application/core/constants/colors.dart';
 class AppTextTheme {
   static TextTheme appTextTheme() {
     return const TextTheme(
-      titleMedium: TextStyle(color: Colors.grey, fontSize: 24),
-      titleSmall: TextStyle(color: AppColor.primaryColor, fontSize: 16),
-      headlineMedium: TextStyle(
-        color: AppColor.blackColor,
-        fontWeight: FontWeight.w600,
-        fontSize: 32,
-      ),
-      headlineSmall: TextStyle(color: AppColor.blackColor, fontSize: 16),
-      bodyLarge: TextStyle(color: AppColor.blackColor, fontSize: 16),
-      labelMedium: TextStyle(color: AppColor.whiteColor, fontSize: 16),
+      headlineSmall: TextStyle(color: Colors.grey, fontSize: 24),
+      titleSmall: TextStyle(color: AppColor.primaryColor, fontSize: 14),
+      headlineMedium: TextStyle(color: AppColor.blackColor, fontWeight: FontWeight.w600, fontSize: 32,),
+      bodyLarge: TextStyle(color: AppColor.blackColor, fontSize: 16, fontWeight: FontWeight.w400),
+      titleMedium: TextStyle(color: AppColor.whiteColor, fontSize: 16),
+      bodyMedium: TextStyle(color: AppColor.blackColor, fontSize: 14, fontWeight: FontWeight.w400),
     );
   }
 }

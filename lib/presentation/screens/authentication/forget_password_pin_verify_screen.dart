@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
-import 'package:to_do_application/presentation/screens/reset_password_screen.dart';
+import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
+import 'package:to_do_application/presentation/screens/authentication/reset_password_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
-import 'login_screen.dart';
 
 class ForgetPasswordPINVerifyScreen extends StatefulWidget {
   const ForgetPasswordPINVerifyScreen({super.key});
@@ -56,7 +56,7 @@ class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyS
                     Text(
                       AppStrings.enterPinInstructions,
                       textAlign: TextAlign.justify,
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 28),
                     PinCodeTextField(
@@ -87,7 +87,7 @@ class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyS
                       onPressed: () => _onTapVerifyButton(),
                       child: Text(
                         AppStrings.verify,
-                        style: Theme.of(context).textTheme.labelMedium,
+                        style: Theme.of(context).textTheme.titleMedium,
                       )
                     ),
                     const SizedBox(height: 45),

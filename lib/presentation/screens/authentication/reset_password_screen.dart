@@ -2,34 +2,34 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
-import 'forget_password_pin_verify_screen.dart';
-import 'login_screen.dart';
-
-class ForgetPasswordScreen extends StatefulWidget {
-  const ForgetPasswordScreen({super.key});
+class ResetPasswordScreen extends StatefulWidget {
+  const ResetPasswordScreen({super.key});
 
   @override
-  State<ForgetPasswordScreen> createState() => _ForgetPasswordScreenState();
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
 }
 
-class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
-  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _newPasswordTEController = TextEditingController();
+  final TextEditingController _confirmNewPasswordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _onTapLogin(){
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
   }
 
-  void _onTapNextButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const ForgetPasswordPINVerifyScreen()));
+  void _onTapSubmitButton(){
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
   }
 
   @override
   void dispose() {
-    _emailTEController.dispose();
+    _newPasswordTEController.dispose();
+    _confirmNewPasswordTEController.dispose();
     super.dispose();
   }
 
@@ -48,29 +48,33 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      AppStrings.yourEmail,
+                      AppStrings.setPassword,
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 5),
                     Text(
-                      AppStrings.forgetPassInstructions,
+                      AppStrings.resetPassInstructions,
                       textAlign: TextAlign.justify,
-                      style: Theme.of(context).textTheme.headlineSmall,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 28),
                     TextFormField(
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailTEController,
-                      decoration: InputDecoration(hintText: AppStrings.email),
+                      textInputAction: TextInputAction.next,
+                      controller: _newPasswordTEController,
+                      decoration: InputDecoration(hintText: AppStrings.newPassword),
+                    ),
+                    const SizedBox(height: 10),
+                    TextFormField(
+                      controller: _confirmNewPasswordTEController,
+                      decoration: InputDecoration(hintText: AppStrings.confirmNewPassword),
                     ),
                     const SizedBox(height: 25),
                     ElevatedButton(
-                      onPressed: () => _onTapNextButton(),
-                      child: const Icon(
-                        Icons.arrow_circle_right_outlined,
-                        size: 32,
-                        color: AppColor.whiteColor,
-                      ),
+                      onPressed: () => _onTapSubmitButton(),
+                      child: Text(
+                        AppStrings.submit,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      )
                     ),
                     const SizedBox(height: 45),
                     RichText(text: TextSpan(children: [
