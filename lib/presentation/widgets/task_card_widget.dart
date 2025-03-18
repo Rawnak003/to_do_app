@@ -32,6 +32,7 @@ class TaskCard extends StatelessWidget {
                   label: Text(
                     status,
                     style: TextStyle(
+                      fontSize: 12,
                       color: AppColor.whiteColor,
                       fontWeight: FontWeight.w600,
                     ),

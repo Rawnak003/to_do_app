@@ -4,8 +4,7 @@ import 'package:to_do_application/presentation/screens/features/cancelled_task_s
 import 'package:to_do_application/presentation/screens/features/completed_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/new_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/progress_task_screen.dart';
-
-import '../widgets/custom_app_bar.dart';
+import 'package:to_do_application/presentation/widgets/custom_app_bar.dart';
 
 class MainBottomNavScreen extends StatefulWidget {
   const MainBottomNavScreen({super.key});

@@ -11,6 +11,9 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
+  final ScrollController _scrollController = ScrollController();
+  bool _showFAB = true;
+
   List<String> date = [
     '01-01-2025',
     '02-01-2025',
@@ -25,14 +28,41 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(() {
+      if (_scrollController.offset > 0 && _showFAB) {
+        setState(() {
+          _showFAB = false; // Remove FAB when scrolling
+        });
+      } else if (_scrollController.offset <= 0 && !_showFAB) {
+        setState(() {
+          _showFAB = true; // Show FAB when at the top
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: AppColor.primaryColor,
-        onPressed: () {},
-        child: Icon(Icons.add, color: AppColor.whiteColor),
-      ),
+
+      floatingActionButton:
+          _showFAB
+              ? FloatingActionButton(
+                backgroundColor: AppColor.primaryColor,
+                onPressed: () {},
+                child: Icon(Icons.add, color: AppColor.whiteColor),
+              )
+              : null, // Completely removes FAB when scrolling
+
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -47,8 +77,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               ],
             ),
             const SizedBox(height: 8),
+
             Expanded(
               child: ListView.separated(
+                controller: _scrollController, // Added controller
                 itemCount: date.length,
                 itemBuilder:
                     (context, index) => TaskCard(
