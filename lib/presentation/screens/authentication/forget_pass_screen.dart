@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/presentation/screens/authentication/forget_password_pin_verify_screen.dart';
 import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
@@ -19,19 +20,17 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _onTapLogin() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushNamedAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      RoutesName.login,
       (pre) => false,
     );
   }
 
   void _onTapNextButton() {
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => const ForgetPasswordPINVerifyScreen(),
-      ),
+      RoutesName.forgetPasswordPinVerify,
     );
   }
 

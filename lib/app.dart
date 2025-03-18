@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/core/routes/app_routes.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/themes/button_theme.dart';
 import 'package:to_do_application/core/themes/input_decoration.dart';
 import 'package:to_do_application/core/themes/text_themes.dart';
-import 'package:to_do_application/presentation/screens/splash_screen.dart';
 
 class TaskManagerApp extends StatelessWidget {
   const TaskManagerApp({super.key});
@@ -20,7 +21,8 @@ class TaskManagerApp extends StatelessWidget {
         elevatedButtonTheme: AppButtonTheme.buttonTheme(),
         textTheme: AppTextTheme.appTextTheme(),
       ),
-      home: SplashScreen(),
+      initialRoute: RoutesName.splash,
+      onGenerateRoute: Routes.generateRoute,
     );
   }
 }

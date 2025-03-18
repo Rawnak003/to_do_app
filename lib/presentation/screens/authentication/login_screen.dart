@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/presentation/screens/authentication/forget_pass_screen.dart';
 import 'package:to_do_application/presentation/screens/authentication/register_screen.dart';
 import 'package:to_do_application/presentation/screens/main_bottom_nav_screen.dart';
@@ -21,24 +22,24 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _onTapLogin() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushNamedAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => MainBottomNavScreen()),
+      RoutesName.mainBottomNav,
       (pre) => false,
     );
   }
 
   void _onTapRegister() {
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(builder: (context) => RegisterScreen()),
+      RoutesName.register,
     );
   }
 
   void _onTapForgetPassword() {
-    Navigator.push(
+    Navigator.pushNamed(
       context,
-      MaterialPageRoute(builder: (context) => const ForgetPasswordScreen()),
+      RoutesName.forgetPassword,
     );
   }
 

@@ -3,29 +3,37 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
 import 'package:to_do_application/presentation/screens/authentication/reset_password_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
-
 
 class ForgetPasswordPINVerifyScreen extends StatefulWidget {
   const ForgetPasswordPINVerifyScreen({super.key});
 
   @override
-  State<ForgetPasswordPINVerifyScreen> createState() => _ForgetPasswordPINVerifyScreenState();
+  State<ForgetPasswordPINVerifyScreen> createState() =>
+      _ForgetPasswordPINVerifyScreenState();
 }
 
-class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyScreen> {
-
+class _ForgetPasswordPINVerifyScreenState
+    extends State<ForgetPasswordPINVerifyScreen> {
   final TextEditingController _pinInputTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void _onTapLogin(){
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
+  void _onTapLogin() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.login,
+      (pre) => false,
+    );
   }
 
-  void _onTapVerifyButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen()));
+  void _onTapVerifyButton() {
+    Navigator.pushNamed(
+      context,
+      RoutesName.resetPassword,
+    );
   }
 
   @override
@@ -88,28 +96,33 @@ class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyS
                       child: Text(
                         AppStrings.verify,
                         style: Theme.of(context).textTheme.titleMedium,
-                      )
+                      ),
                     ),
                     const SizedBox(height: 45),
-                    RichText(text: TextSpan(children: [
-                      TextSpan(
-                        text: AppStrings.alreadyHaveAccount,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColor.blackColor,
-                        ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: AppStrings.alreadyHaveAccount,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColor.blackColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: AppStrings.login,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: AppColor.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            recognizer:
+                                TapGestureRecognizer()
+                                  ..onTap = () => _onTapLogin(),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: AppStrings.login,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: AppColor.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => _onTapLogin(),
-                      ),
-                    ])),
+                    ),
                   ],
                 ),
               ),

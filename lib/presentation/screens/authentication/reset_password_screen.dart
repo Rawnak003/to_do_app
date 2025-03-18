@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
@@ -13,17 +14,26 @@ class ResetPasswordScreen extends StatefulWidget {
 }
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
-
-  final TextEditingController _newPasswordTEController = TextEditingController();
-  final TextEditingController _confirmNewPasswordTEController = TextEditingController();
+  final TextEditingController _newPasswordTEController =
+      TextEditingController();
+  final TextEditingController _confirmNewPasswordTEController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  void _onTapLogin(){
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
+  void _onTapLogin() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.login,
+      (pre) => false,
+    );
   }
 
-  void _onTapSubmitButton(){
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
+  void _onTapSubmitButton() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.login,
+          (pre) => false,
+    );
   }
 
   @override
@@ -61,12 +71,16 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     TextFormField(
                       textInputAction: TextInputAction.next,
                       controller: _newPasswordTEController,
-                      decoration: InputDecoration(hintText: AppStrings.newPassword),
+                      decoration: InputDecoration(
+                        hintText: AppStrings.newPassword,
+                      ),
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: _confirmNewPasswordTEController,
-                      decoration: InputDecoration(hintText: AppStrings.confirmNewPassword),
+                      decoration: InputDecoration(
+                        hintText: AppStrings.confirmNewPassword,
+                      ),
                     ),
                     const SizedBox(height: 25),
                     ElevatedButton(
@@ -74,28 +88,33 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       child: Text(
                         AppStrings.submit,
                         style: Theme.of(context).textTheme.titleMedium,
-                      )
+                      ),
                     ),
                     const SizedBox(height: 45),
-                    RichText(text: TextSpan(children: [
-                      TextSpan(
-                        text: AppStrings.alreadyHaveAccount,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColor.blackColor,
-                        ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: AppStrings.alreadyHaveAccount,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColor.blackColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: AppStrings.login,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: AppColor.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            recognizer:
+                                TapGestureRecognizer()
+                                  ..onTap = () => _onTapLogin(),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: AppStrings.login,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: AppColor.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => _onTapLogin(),
-                      ),
-                    ])),
+                    ),
                   ],
                 ),
               ),

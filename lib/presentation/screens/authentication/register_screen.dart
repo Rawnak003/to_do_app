@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -21,7 +22,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _onTapLogin(){
-    Navigator.pop(context);
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.login,
+          (pre) => false,
+    );
+  }
+
+  void _onTapSubmitButton() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.login,
+          (pre) => false,
+    );
   }
 
   @override
@@ -85,7 +98,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                     const SizedBox(height: 25),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () => _onTapSubmitButton(),
                       child: const Icon(
                         Icons.arrow_circle_right_outlined,
                         size: 32,
