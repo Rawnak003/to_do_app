@@ -4,8 +4,6 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
-import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
-import 'package:to_do_application/presentation/screens/authentication/reset_password_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
 class ForgetPasswordPINVerifyScreen extends StatefulWidget {

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
-import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
