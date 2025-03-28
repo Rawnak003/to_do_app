@@ -34,73 +34,75 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.backgroundColor,
-      appBar: CustomAppBar(fromProfile: true,),
-      body: ScreenBackground(
-        child: Padding(
-          padding: const EdgeInsets.all(32.0),
-          child: Center(
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      AppStrings.updateProfile,
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    const SizedBox(height: 28),
-                    _buildPhotoPickerWidget(context),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.emailAddress,
-                      controller: _emailTEController,
-                      decoration: InputDecoration(hintText: AppStrings.email),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      controller: _firstNameTEController,
-                      decoration: InputDecoration(
-                        hintText: AppStrings.firstName,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColor.backgroundColor,
+        appBar: CustomAppBar(fromProfile: true,),
+        body: ScreenBackground(
+          child: Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: Center(
+              child: SingleChildScrollView(
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        AppStrings.updateProfile,
+                        style: Theme.of(context).textTheme.headlineMedium,
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      controller: _lastNameTEController,
-                      decoration: InputDecoration(
-                        hintText: AppStrings.lastName,
+                      const SizedBox(height: 28),
+                      _buildPhotoPickerWidget(context),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.emailAddress,
+                        controller: _emailTEController,
+                        decoration: InputDecoration(hintText: AppStrings.email),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.phone,
-                      controller: _phoneTEController,
-                      decoration: InputDecoration(hintText: AppStrings.phone),
-                    ),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _passwordTEController,
-                      decoration: InputDecoration(
-                        hintText: AppStrings.password,
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        controller: _firstNameTEController,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.firstName,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 25),
-                    ElevatedButton(
-                      onPressed: () => _onTapUpdateButton(),
-                      child: const Icon(
-                        Icons.arrow_circle_right_outlined,
-                        size: 32,
-                        color: AppColor.whiteColor,
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        controller: _lastNameTEController,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.lastName,
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.phone,
+                        controller: _phoneTEController,
+                        decoration: InputDecoration(hintText: AppStrings.phone),
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: _passwordTEController,
+                        decoration: InputDecoration(
+                          hintText: AppStrings.password,
+                        ),
+                      ),
+                      const SizedBox(height: 25),
+                      ElevatedButton(
+                        onPressed: () => _onTapUpdateButton(),
+                        child: const Icon(
+                          Icons.arrow_circle_right_outlined,
+                          size: 32,
+                          color: AppColor.whiteColor,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

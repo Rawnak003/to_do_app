@@ -7,6 +7,7 @@ import 'package:to_do_application/core/utils/util_message.dart';
 import 'package:to_do_application/data/services/network_client.dart';
 import 'package:to_do_application/data/services/network_response.dart';
 import 'package:to_do_application/data/utils/app_urls.dart';
+import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -66,6 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
     if (response.isSuccess) {
       Utils.toastMessage("Registration Successful!");
+      _allClear();
       Navigator.pushNamedAndRemoveUntil(
         context,
         RoutesName.login,
@@ -74,6 +76,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else {
       Utils.toastMessage("Registration Failed!");
     }
+  }
+
+  _allClear(){
+    _emailTEController.clear();
+    _firstNameTEController.clear();
+    _lastNameTEController.clear();
+    _phoneTEController.clear();
+    _passwordTEController.clear();
   }
 
   @override
@@ -177,11 +187,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     const SizedBox(height: 25),
                     Visibility(
                       visible: registrationInProgress == false,
-                      replacement: Center(
-                        child: CircularProgressIndicator(
-                          color: AppColor.primaryColor,
-                        ),
-                      ),
+                      replacement: CenterCircularIndicatorWidget(),
                       child: ElevatedButton(
                         onPressed: () => _onTapSubmitButton(),
                         child: const Icon(
@@ -221,3 +227,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 }
+

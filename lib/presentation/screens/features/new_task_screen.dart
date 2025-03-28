@@ -75,14 +75,17 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                DetailsShowCard(title: 'New', count: 10),
-                DetailsShowCard(title: 'Progress', count: 10),
-                DetailsShowCard(title: 'Completed', count: 10),
-                DetailsShowCard(title: 'Cancelled', count: 10),
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  DetailsShowCard(title: 'New', count: 10),
+                  DetailsShowCard(title: 'Progress', count: 10),
+                  DetailsShowCard(title: 'Completed', count: 10),
+                  DetailsShowCard(title: 'Cancelled', count: 10),
+                ],
+              ),
             ),
             const SizedBox(height: 8),
 

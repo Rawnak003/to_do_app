@@ -28,7 +28,7 @@ class DetailsShowCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text("$count", style: Theme.of(context).textTheme.headlineMedium?.copyWith(color: AppColor.whiteColor),),
-            Text(title, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),),
+            Text(title, style: Theme.of(context).textTheme.bodyLarge?.copyWith(fontSize: 15,fontWeight: FontWeight.w600),),
           ],
         ),
       ),
