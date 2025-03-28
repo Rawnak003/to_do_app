@@ -1,17 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 
+enum TaskStatus { newTask, progressTask, completedTask, cancelledTask }
+
 class TaskCard extends StatelessWidget {
   const TaskCard({
-    super.key, required this.title, required this.subtitle, required this.date, required this.status, required this.index, required this.chipColor,
+    super.key, required this.status, required this.title, required this.subtitle, required this.date, required this.index,
   });
 
+  final TaskStatus status;
   final String title;
   final String subtitle;
-  final List<String> date;
-  final String status;
+  final List date;
   final int index;
-  final Color chipColor;
+
+  Color _getChipColor (){
+    late Color color;
+    switch(status){
+      case TaskStatus.newTask:
+        color = AppColor.blueColor;
+      case TaskStatus.progressTask:
+        color = AppColor.purpleColor;
+      case TaskStatus.completedTask:
+        color = AppColor.greenColor;
+      case TaskStatus.cancelledTask:
+        color = AppColor.redColor;
+    }
+    return color;
+  }
+
+  String _getStatus (){
+    late String st;
+    switch(status){
+      case TaskStatus.newTask:
+        st = "New";
+      case TaskStatus.progressTask:
+        st = "Progress";
+      case TaskStatus.completedTask:
+        st = "Completed";
+      case TaskStatus.cancelledTask:
+        st = "Cancelled";
+    }
+    return st;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,14 +61,14 @@ class TaskCard extends StatelessWidget {
               children: [
                 Chip(
                   label: Text(
-                    status,
+                    _getStatus(),
                     style: TextStyle(
                       fontSize: 12,
                       color: AppColor.whiteColor,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  backgroundColor: chipColor,
+                  backgroundColor: _getChipColor(),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
                     side: BorderSide.none,

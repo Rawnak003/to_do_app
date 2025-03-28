@@ -5,10 +5,12 @@ import 'package:to_do_application/presentation/screens/authentication/forget_pas
 import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
 import 'package:to_do_application/presentation/screens/authentication/register_screen.dart';
 import 'package:to_do_application/presentation/screens/authentication/reset_password_screen.dart';
+import 'package:to_do_application/presentation/screens/features/add_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/cancelled_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/completed_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/new_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/progress_task_screen.dart';
+import 'package:to_do_application/presentation/screens/features/update_profile_screen.dart';
 import 'package:to_do_application/presentation/screens/main_bottom_nav_screen.dart';
 import 'package:to_do_application/presentation/screens/splash_screen.dart';
 
@@ -54,6 +56,14 @@ class Routes {
       case RoutesName.cancelledTask:
         return MaterialPageRoute(
           builder: (BuildContext context) => const CancelledTaskScreen(),
+        );
+      case RoutesName.addTask:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const AddTaskScreen(),
+        );
+      case RoutesName.updateProfile:
+        return MaterialPageRoute(
+          builder: (BuildContext context) => const UpdateProfileScreen(),
         );
       default:
         return MaterialPageRoute(builder: (context) => const SplashScreen());

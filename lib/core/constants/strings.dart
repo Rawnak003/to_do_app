@@ -20,6 +20,13 @@ class AppStrings{
   static const String newPassword = 'New Password';
   static const String confirmNewPassword = 'Confirm New Password';
   static const String submit = 'Submit';
+  static const String addNewTask = 'Add New Task';
+  static const String addTask = 'Add Task';
+  static const String taskName = 'Title';
+  static const String taskDescription = 'Description';
+  static const String updateProfile = 'Update Profile';
+  static const String photo = 'Photo';
+  static const String selectPhoto = 'Select Your Photo';
   static const String forgetPassInstructions = 'A 6 digit verification pin will be sent to your email address.';
   static const String resetPassInstructions = 'Set a new password for your account minimum length of 8 characters.';
   static const String enterPinInstructions = 'A 6 digit verification pin will be sent to your email address. Please enter the pin to continue.';

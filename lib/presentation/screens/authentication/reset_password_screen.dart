@@ -31,7 +31,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     Navigator.pushNamedAndRemoveUntil(
       context,
       RoutesName.login,
-          (pre) => false,
+      (pre) => false,
     );
   }
 

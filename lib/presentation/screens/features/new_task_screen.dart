@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/presentation/widgets/details_show_card__widget.dart';
 import 'package:to_do_application/presentation/widgets/task_card_widget.dart';
 
@@ -43,6 +44,13 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     });
   }
 
+  void _onTapAddTask() {
+    Navigator.pushNamed(
+      context,
+      RoutesName.addTask,
+    );
+  }
+
   @override
   void dispose() {
     _scrollController.dispose();
@@ -58,8 +66,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
           _showFAB
               ? FloatingActionButton(
                 backgroundColor: AppColor.primaryColor,
-                onPressed: () {},
-                child: Icon(Icons.add, color: AppColor.whiteColor),
+                onPressed: () => _onTapAddTask(),
+                child: Icon(Icons.add, size: 30, color: AppColor.whiteColor),
               )
               : null, // Completely removes FAB when scrolling
 
@@ -87,9 +95,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
                       title: "This is title",
                       subtitle: "This is subtitle",
                       date: date,
-                      status: "New",
+                      status: TaskStatus.newTask,
                       index: index,
-                      chipColor: AppColor.blueColor,
                     ),
                 separatorBuilder: (context, index) => const SizedBox(height: 5),
               ),
