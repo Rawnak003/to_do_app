@@ -4,9 +4,11 @@ import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
+import 'package:to_do_application/data/models/auth_model.dart';
 import 'package:to_do_application/data/services/network_client.dart';
 import 'package:to_do_application/data/services/network_response.dart';
 import 'package:to_do_application/data/utils/app_urls.dart';
+import 'package:to_do_application/presentation/controllers/auth_controller.dart';
 import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
@@ -52,6 +54,9 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (response.isSuccess) {
+      AuthModel authModel = AuthModel.fromJson(response.data!);
+      AuthController.saveUserInfo(authModel.accessToken, authModel.userModel);
+
       Utils.toastMessage("Login Successful!");
       _allClear();
       Navigator.pushNamedAndRemoveUntil(
@@ -130,9 +135,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             obscurePassword
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility,
-                            color: obscurePassword ? AppColor.greyColor : AppColor.primaryColor,
+                                ? Icons.visibility
+                                : Icons.visibility_off_outlined,
+                            color: obscurePassword ? AppColor.primaryColor : AppColor.greyColor,
                           ),
                           onPressed: () {
                             setState(() {

@@ -19,7 +19,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final TextEditingController _confirmNewPasswordTEController =
       TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _resetInProgress = false;
+  bool _reSetInProgress = false;
   bool obscurePassword1 = true;
   bool obscurePassword2 = true;
 
@@ -87,9 +87,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             obscurePassword1
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility,
-                            color: obscurePassword1 ? AppColor.greyColor : AppColor.primaryColor,
+                                ? Icons.visibility
+                                : Icons.visibility_off_outlined,
+                            color: obscurePassword1 ? AppColor.primaryColor : AppColor.greyColor,
                           ),
                           onPressed: () {
                             setState(() {
@@ -116,9 +116,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             obscurePassword2
-                                ? Icons.visibility_off_outlined
-                                : Icons.visibility,
-                            color: obscurePassword2 ? AppColor.greyColor : AppColor.primaryColor,
+                                ? Icons.visibility
+                                : Icons.visibility_off_outlined,
+                            color: obscurePassword2 ? AppColor.primaryColor : AppColor.greyColor,
                           ),
                           onPressed: () {
                             setState(() {
@@ -137,7 +137,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                     const SizedBox(height: 25),
                     Visibility(
-                      visible: _resetInProgress == false,
+                      visible: _reSetInProgress == false,
                       replacement: CenterCircularIndicatorWidget(),
                       child: ElevatedButton(
                         onPressed: () => _onTapSubmitButton(),

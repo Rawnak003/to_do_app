@@ -42,21 +42,18 @@ class NetworkClient {
       );
       if (response.statusCode == 200) {
         final decodedJSON = jsonDecode(response.body);
-        print("Status Code: ${response.statusCode}");
         return NetworkResponse(
           isSuccess: true,
           statusCode: response.statusCode,
           data: decodedJSON,
         );
       } else {
-        print("Status Code: ${response.statusCode}");
         return NetworkResponse(
           isSuccess: false,
           statusCode: response.statusCode,
         );
       }
     } catch (e) {
-      print("Status: ${e.toString()}");
       return NetworkResponse(
         isSuccess: false,
         statusCode: -1,
