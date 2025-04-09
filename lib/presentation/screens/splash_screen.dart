@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/spacing.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/assets_path.dart';
+import 'package:to_do_application/presentation/controllers/auth_controller.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
 
@@ -22,9 +23,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> _moveToNextScreen() async {
     await Future.delayed(const Duration(seconds: 3));
-    Navigator.pushReplacementNamed(
+    final bool isLoggedIn = await AuthController.checkIfUserLoggedIn();
+    Navigator.pushNamedAndRemoveUntil(
       context,
-      RoutesName.login,
+      isLoggedIn ? RoutesName.mainBottomNav : RoutesName.login,
+      (pre) => false,
     );
   }
 

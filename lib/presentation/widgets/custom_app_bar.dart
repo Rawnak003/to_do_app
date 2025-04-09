@@ -1,18 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
+import 'package:to_do_application/presentation/controllers/auth_controller.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   const CustomAppBar({
     super.key, this.fromProfile,
   });
 
   final bool? fromProfile;
 
+  @override
+  State<CustomAppBar> createState() => _CustomAppBarState();
+
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
   void _onTapProfile(BuildContext context) {
     Navigator.pushNamed(
       context,
       RoutesName.updateProfile,
+    );
+  }
+
+  Future<void> _onTapLogoutButton(BuildContext context) async {
+    await AuthController.clearUserData();
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.login,
+      (pre) => false,
     );
   }
 
@@ -24,7 +42,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       iconTheme: IconThemeData(color: AppColor.whiteColor),
       title: InkWell(
         onTap: () {
-          if(fromProfile ?? false) {
+          if(widget.fromProfile ?? false) {
             return;
           }
           _onTapProfile(context);
@@ -38,19 +56,21 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("S. M. Rawnak Muntasir", style: textTheme.bodyLarge?.copyWith(color: AppColor.whiteColor, fontWeight: FontWeight.w600),),
-                Text("shmrawnak@gmail.com", style: textTheme.bodyMedium?.copyWith(color: AppColor.whiteColor,),),
+                Text(AuthController.userModel?.fullName ?? 'Unknown Person', style: textTheme.bodyLarge?.copyWith(color: AppColor.whiteColor, fontWeight: FontWeight.w600),),
+                Text(AuthController.userModel?.email ?? 'Unknown', style: textTheme.bodyMedium?.copyWith(color: AppColor.whiteColor,),),
               ],
             )
           ],
         ),
       ),
       actions: [
-        IconButton(onPressed: () {}, icon: Icon(Icons.logout_outlined, color: AppColor.whiteColor,)),
+        IconButton(
+          onPressed: () {
+            _onTapLogoutButton(context);
+          },
+          icon: Icon(Icons.logout_outlined, color: AppColor.whiteColor,),
+        ),
       ],
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
