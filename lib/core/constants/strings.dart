@@ -17,6 +17,7 @@ class AppStrings{
   static const String pinVerification = 'PIN Verification';
   static const String verify = 'Verify';
   static const String setPassword = 'Set Password';
+  static const String oldPassword = 'Old Password';
   static const String newPassword = 'New Password';
   static const String confirmNewPassword = 'Confirm New Password';
   static const String submit = 'Submit';
@@ -25,6 +26,7 @@ class AppStrings{
   static const String taskName = 'Title';
   static const String taskDescription = 'Description';
   static const String updateProfile = 'Update Profile';
+  static const String updatePassword = 'Update Password';
   static const String photo = 'Photo';
   static const String selectPhoto = 'Select Your Photo';
   static const String forgetPassInstructions = 'A 6 digit verification pin will be sent to your email address.';

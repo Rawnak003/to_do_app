@@ -7,12 +7,20 @@ import 'package:to_do_application/core/themes/button_theme.dart';
 import 'package:to_do_application/core/themes/input_decoration.dart';
 import 'package:to_do_application/core/themes/text_themes.dart';
 
-class TaskManagerApp extends StatelessWidget {
+class TaskManagerApp extends StatefulWidget {
   const TaskManagerApp({super.key});
 
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  State<TaskManagerApp> createState() => _TaskManagerAppState();
+}
+
+class _TaskManagerAppState extends State<TaskManagerApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: TaskManagerApp.navigatorKey,
       debugShowCheckedModeBanner: false,
       title: AppStrings.appName,
       theme: ThemeData(

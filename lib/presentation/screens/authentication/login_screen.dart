@@ -56,6 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (response.isSuccess) {
       AuthModel loginModel = AuthModel.fromJson(response.data!);
       AuthController.saveUserInformation(loginModel.token, loginModel.userModel);
+      AuthController.saveUserPass(_passwordTEController.text);
       Utils.toastMessage("Login Successfully!");
       _allClear();
       Navigator.pushNamedAndRemoveUntil(

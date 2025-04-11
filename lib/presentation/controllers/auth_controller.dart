@@ -18,6 +18,20 @@ class AuthController {
     userModel = user;
   }
 
+  static Future<void> saveUserPass(String pass) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('pass', pass);
+  }
+
+  static Future<String?> getUserPass() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? userAccess = sharedPreferences.getString('pass');
+    if (userAccess != null) {
+      return userAccess;
+    }
+    return null;
+  }
+
   static Future<void> getUserInformation() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? accessToken = sharedPreferences.getString(_tokenKey);
