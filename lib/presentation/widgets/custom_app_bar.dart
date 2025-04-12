@@ -60,9 +60,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
           mainAxisSize: MainAxisSize.min,
           children: [
             CircleAvatar(
-              backgroundImage: _shouldShowImage(AuthController.userModel?.photo) ? MemoryImage(
-                base64Decode(AuthController.userModel?.photo ?? ''),
-              ) : null,
+              backgroundImage: _shouldShowImage(AuthController.profilePhoto)
+                  ? MemoryImage(base64Decode(AuthController.profilePhoto ?? ''))
+                  : null,
             ),
             const SizedBox(width: 10,),
             Column(

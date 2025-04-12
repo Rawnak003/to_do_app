@@ -79,21 +79,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
 
     if (response.isSuccess) {
-      AuthController.userModel = AuthController.userModel!.copyWith(
-        email: requestBody["email"],
-        firstName: requestBody["firstName"],
-        lastName: requestBody["lastName"],
-        mobile: requestBody["mobile"],
-        photo: requestBody["photo"],
-      );
-      setState(() {});
+    // update profile
       await AuthController.saveUpdatedUserDetailsToPrefsWithoutPassword(requestBody);
-      setState(() {
-        _emailTEController.text = requestBody["email"];
-        _firstNameTEController.text = requestBody["firstName"];
-        _lastNameTEController.text = requestBody["lastName"];
-        _phoneTEController.text = requestBody["mobile"];
-      });
       Navigator.pop(context, true);
       Utils.toastMessage("Update Successful!");
     } else {
@@ -143,20 +130,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
 
     if (response.isSuccess) {
-      AuthController.userModel = AuthController.userModel!.copyWith(
-        email: requestBody["email"],
-        firstName: requestBody["firstName"],
-        lastName: requestBody["lastName"],
-        mobile: requestBody["mobile"],
-        photo: requestBody["photo"],
-      );
+      // update profile
       await AuthController.saveUpdatedUserDetailsToPrefsWithPassword(requestBody);
-      setState(() {
-        _emailTEController.text = requestBody["email"];
-        _firstNameTEController.text = requestBody["firstName"];
-        _lastNameTEController.text = requestBody["lastName"];
-        _phoneTEController.text = requestBody["mobile"];
-      });
       Navigator.pop(context, true);
       _oldPasswordTEController.clear();
       _newPasswordTEController.clear();
