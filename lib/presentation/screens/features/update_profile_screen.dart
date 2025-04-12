@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:to_do_application/core/constants/colors.dart';
@@ -60,6 +62,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       "mobile": _phoneTEController.text.trim(),
     };
 
+    if (_pickedImage != null) {
+      List<int> imageBytes = await _pickedImage!.readAsBytes();
+      String encodedImage = base64Encode(imageBytes);
+      requestBody["photo"] = encodedImage;
+    }
+
     NetworkResponse response = await NetworkClient.postRequest(
       url: AppURLs.profileUpdateURL,
       body: requestBody,
@@ -76,6 +84,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         firstName: requestBody["firstName"],
         lastName: requestBody["lastName"],
         mobile: requestBody["mobile"],
+        photo: requestBody["photo"],
       );
       setState(() {});
       await AuthController.saveUpdatedUserDetailsToPrefsWithoutPassword(requestBody);
@@ -105,6 +114,12 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       "mobile": _phoneTEController.text.trim(),
     };
 
+    if (_pickedImage != null) {
+      List<int> imageBytes = await _pickedImage!.readAsBytes();
+      String encodedImage = base64Encode(imageBytes);
+      requestBody["photo"] = encodedImage;
+    }
+
     if(_oldPasswordTEController.text.isNotEmpty && _newPasswordTEController.text.isNotEmpty) {
       String? userOldPassword = await AuthController.getUserPass();
       if(_oldPasswordTEController.text != userOldPassword) {
@@ -133,6 +148,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
         firstName: requestBody["firstName"],
         lastName: requestBody["lastName"],
         mobile: requestBody["mobile"],
+        photo: requestBody["photo"],
       );
       await AuthController.saveUpdatedUserDetailsToPrefsWithPassword(requestBody);
       setState(() {

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
@@ -37,6 +39,10 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
+  bool _shouldShowImage(String? photo){
+    return photo != null && photo.isNotEmpty;
+  }
+
   @override
   Widget build(BuildContext context) {
     TextTheme textTheme = Theme.of(context).textTheme;
@@ -53,7 +59,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            CircleAvatar(),
+            CircleAvatar(
+              backgroundImage: _shouldShowImage(AuthController.userModel?.photo) ? MemoryImage(
+                base64Decode(AuthController.userModel?.photo ?? ''),
+              ) : null,
+            ),
             const SizedBox(width: 10,),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
