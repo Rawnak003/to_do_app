@@ -18,20 +18,6 @@ class AuthController {
     userModel = user;
   }
 
-  static Future<void> saveUserPass(String pass) async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    sharedPreferences.setString('pass', pass);
-  }
-
-  static Future<String?> getUserPass() async {
-    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-    String? userAccess = sharedPreferences.getString('pass');
-    if (userAccess != null) {
-      return userAccess;
-    }
-    return null;
-  }
-
   static Future<void> getUserInformation() async {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     String? accessToken = sharedPreferences.getString(_tokenKey);
@@ -59,5 +45,39 @@ class AuthController {
     await sharedPreferences.clear();
     token = null;
     userModel = null;
+  }
+
+  static Future<void> saveUpdatedUserDetailsToPrefsWithoutPassword(Map<String, dynamic> userDetails) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("email", userDetails["email"]);
+    await prefs.setString("firstName", userDetails["firstName"]);
+    await prefs.setString("lastName", userDetails["lastName"]);
+    await prefs.setString("mobile", userDetails["mobile"]);
+  }
+
+  static Future<void> saveUpdatedUserDetailsToPrefsWithPassword(Map<String, dynamic> userDetails) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString("email", userDetails["email"]);
+    await prefs.setString("firstName", userDetails["firstName"]);
+    await prefs.setString("lastName", userDetails["lastName"]);
+    await prefs.setString("mobile", userDetails["mobile"]);
+
+    if (userDetails.containsKey("password")) {
+      await prefs.setString("password", userDetails["password"]);
+    }
+  }
+
+  static Future<void> saveUserPass(String pass) async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    sharedPreferences.setString('pass', pass);
+  }
+
+  static Future<String?> getUserPass() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    String? userAccess = sharedPreferences.getString('pass');
+    if (userAccess != null) {
+      return userAccess;
+    }
+    return null;
   }
 }

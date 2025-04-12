@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:to_do_application/app.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
+import 'package:to_do_application/core/utils/util_message.dart';
 import 'package:to_do_application/data/services/network_response.dart';
 import 'package:to_do_application/presentation/controllers/auth_controller.dart';
 
@@ -80,6 +81,7 @@ class NetworkClient {
 
   static Future<void> _moveUserToLoginPage() async {
     await AuthController.clearUserData();
+    Utils.snackBar("Authorization Failed. Please Login Again.", TaskManagerApp.navigatorKey.currentContext!);
     Navigator.pushNamedAndRemoveUntil(
       TaskManagerApp.navigatorKey.currentContext!,
       RoutesName.login,

@@ -71,6 +71,21 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
 
     if (response.isSuccess) {
+      AuthController.userModel = AuthController.userModel!.copyWith(
+        email: requestBody["email"],
+        firstName: requestBody["firstName"],
+        lastName: requestBody["lastName"],
+        mobile: requestBody["mobile"],
+      );
+      setState(() {});
+      await AuthController.saveUpdatedUserDetailsToPrefsWithoutPassword(requestBody);
+      setState(() {
+        _emailTEController.text = requestBody["email"];
+        _firstNameTEController.text = requestBody["firstName"];
+        _lastNameTEController.text = requestBody["lastName"];
+        _phoneTEController.text = requestBody["mobile"];
+      });
+      Navigator.pop(context, true);
       Utils.toastMessage("Update Successful!");
     } else {
       Utils.toastMessage("Update Failed!");
@@ -113,6 +128,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
 
     if (response.isSuccess) {
+      AuthController.userModel = AuthController.userModel!.copyWith(
+        email: requestBody["email"],
+        firstName: requestBody["firstName"],
+        lastName: requestBody["lastName"],
+        mobile: requestBody["mobile"],
+      );
+      await AuthController.saveUpdatedUserDetailsToPrefsWithPassword(requestBody);
+      setState(() {
+        _emailTEController.text = requestBody["email"];
+        _firstNameTEController.text = requestBody["firstName"];
+        _lastNameTEController.text = requestBody["lastName"];
+        _phoneTEController.text = requestBody["mobile"];
+      });
+      Navigator.pop(context, true);
       _oldPasswordTEController.clear();
       _newPasswordTEController.clear();
       Utils.toastMessage("Update Successful!");

@@ -18,11 +18,14 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _CustomAppBarState extends State<CustomAppBar> {
-  void _onTapProfile(BuildContext context) {
-    Navigator.pushNamed(
+  Future<void> _onTapProfile(BuildContext context) async {
+    final isUpdated = await Navigator.pushNamed(
       context,
       RoutesName.updateProfile,
     );
+    if (isUpdated == true) {
+      setState(() {});
+    }
   }
 
   Future<void> _onTapLogoutButton(BuildContext context) async {
@@ -40,7 +43,7 @@ class _CustomAppBarState extends State<CustomAppBar> {
     return AppBar(
       backgroundColor: AppColor.primaryColor,
       iconTheme: IconThemeData(color: AppColor.whiteColor),
-      title: InkWell(
+      title: GestureDetector(
         onTap: () {
           if(widget.fromProfile ?? false) {
             return;
