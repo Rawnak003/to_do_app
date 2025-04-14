@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:to_do_application/core/constants/colors.dart';
@@ -79,7 +78,6 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
 
     if (response.isSuccess) {
-    // update profile
       await AuthController.saveUpdatedUserDetailsToPrefsWithoutPassword(requestBody);
       Navigator.pop(context, true);
       Utils.toastMessage("Update Successful!");
@@ -110,12 +108,11 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     if(_oldPasswordTEController.text.isNotEmpty && _newPasswordTEController.text.isNotEmpty) {
       String? userOldPassword = await AuthController.getUserPass();
       if(_oldPasswordTEController.text != userOldPassword) {
-        Utils.toastMessage("Password is incorrect! Please try again.");
+        Utils.snackBar("Old password is incorrect! Please try again.", context);
       } else if(_oldPasswordTEController.text == _newPasswordTEController.text) {
-        Utils.toastMessage("Same as old password! Please try different password.");
+        Utils.snackBar("Same as old password! Please try different password.", context);
       } else {
         requestBody["password"] = _newPasswordTEController.text;
-        Utils.toastMessage("Password is updated.");
       }
     }
 
@@ -130,14 +127,13 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     });
 
     if (response.isSuccess) {
-      // update profile
       await AuthController.saveUpdatedUserDetailsToPrefsWithPassword(requestBody);
       Navigator.pop(context, true);
       _oldPasswordTEController.clear();
       _newPasswordTEController.clear();
-      Utils.toastMessage("Update Successful!");
+      Utils.toastMessage("Password Update Successful!");
     } else {
-      Utils.toastMessage("Update Failed!");
+      Utils.toastMessage("Password Update Failed!");
     }
   }
 

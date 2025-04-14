@@ -27,7 +27,6 @@ class AuthController {
       UserModel savedUserModel = UserModel.fromJson(jsonDecode(savedUserModelString));
       userModel = savedUserModel;
       profilePhoto = savedUserModel.photo;
-      print("Profile Photo: $profilePhoto");
     }
     token = accessToken;
   }
@@ -66,7 +65,6 @@ class AuthController {
   static Future<void> saveUpdatedUserDetailsToPrefsWithoutPassword(Map<String, dynamic> userDetails) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // Update the in-memory userModel
     if (userModel != null) {
       userModel = userModel!.copyWith(
         email: userDetails["email"],
@@ -76,7 +74,6 @@ class AuthController {
         photo: userDetails["photo"] ?? userModel!.photo,
       );
 
-      // Save updated model to shared preferences
       await prefs.setString(_userDataKey, jsonEncode(userModel!.toJson()));
       profilePhoto = userModel!.photo;
     }

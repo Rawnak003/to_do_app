@@ -3,5 +3,6 @@ class AppURLs{
   static const String registerURL = "$_baseUrl/Registration";
   static const String loginURL = "$_baseUrl/Login";
   static const String profileUpdateURL = "$_baseUrl/ProfileUpdate";
+  static const String addNewTaskURL = "$_baseUrl/createTask";
 }
 
