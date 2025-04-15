@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
+import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/presentation/controllers/auth_controller.dart';
 
@@ -30,7 +31,27 @@ class _CustomAppBarState extends State<CustomAppBar> {
     }
   }
 
-  Future<void> _onTapLogoutButton(BuildContext context) async {
+  void _onTapLogoutButton(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text(AppStrings.logout, style: TextStyle(color: AppColor.blackColor, fontWeight: FontWeight.w600),),
+        content: const Text(AppStrings.logoutMessage),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(AppStrings.cancel),
+          ),
+          TextButton(
+            onPressed: () => _onLogout(context),
+            child: const Text(AppStrings.logout),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _onLogout(BuildContext context) async {
     await AuthController.clearUserData();
     Navigator.pushNamedAndRemoveUntil(
       context,

@@ -124,7 +124,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             Visibility(
               visible: _getTaskCountInProgress == false,
               replacement: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: const EdgeInsets.all(24.0),
                 child: Center(child: const CircularProgressIndicator()),
               ),
               child: _taskStatusCountShow(),
@@ -133,7 +133,7 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
             Visibility(
               visible: _getNewTaskListInProgress == false,
               replacement: Padding(
-                padding: const EdgeInsets.only(top: 200),
+                padding: const EdgeInsets.only(top: 300),
                 child: Center(child: const CircularProgressIndicator()),
               ),
               child: Expanded(

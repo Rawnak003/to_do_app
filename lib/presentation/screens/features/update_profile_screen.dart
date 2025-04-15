@@ -105,16 +105,28 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
       requestBody["photo"] = encodedImage;
     }
 
-    if(_oldPasswordTEController.text.isNotEmpty && _newPasswordTEController.text.isNotEmpty) {
+    if (_oldPasswordTEController.text.isNotEmpty && _newPasswordTEController.text.isNotEmpty) {
       String? userOldPassword = await AuthController.getUserPass();
-      if(_oldPasswordTEController.text != userOldPassword) {
+
+      if (_oldPasswordTEController.text != userOldPassword) {
         Utils.snackBar("Old password is incorrect! Please try again.", context);
-      } else if(_oldPasswordTEController.text == _newPasswordTEController.text) {
-        Utils.snackBar("Same as old password! Please try different password.", context);
-      } else {
-        requestBody["password"] = _newPasswordTEController.text;
+        setState(() {
+          userDetailsUpdateInProgress2 = false;
+        });
+        return;
       }
+
+      if (_oldPasswordTEController.text == _newPasswordTEController.text) {
+        Utils.snackBar("Same as old password! Please try a different password.", context);
+        setState(() {
+          userDetailsUpdateInProgress2 = false;
+        });
+        return;
+      }
+
+      requestBody["password"] = _newPasswordTEController.text;
     }
+
 
     NetworkResponse response = await NetworkClient.postRequest(
       url: AppURLs.profileUpdateURL,

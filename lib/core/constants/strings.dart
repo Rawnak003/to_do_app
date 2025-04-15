@@ -3,7 +3,9 @@ class AppStrings{
   static const String splashScreen = 'Splash Screen';
   static const String home = 'Home';
   static const String login = 'Login';
+  static const String logout = 'Logout';
   static const String register = 'Register';
+  static const String cancel = 'Cancel';
   static const String email = 'Email';
   static const String name = 'Name';
   static const String phone = 'Phone';
@@ -29,6 +31,7 @@ class AppStrings{
   static const String updatePassword = 'Update Password';
   static const String photo = 'Photo';
   static const String selectPhoto = 'Select Your Photo';
+  static const String logoutMessage = 'Are you sure you want to logout?';
   static const String forgetPassInstructions = 'A 6 digit verification pin will be sent to your email address.';
   static const String resetPassInstructions = 'Set a new password for your account minimum length of 8 characters.';
   static const String enterPinInstructions = 'A 6 digit verification pin will be sent to your email address. Please enter the pin to continue.';

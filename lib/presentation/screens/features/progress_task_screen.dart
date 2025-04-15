@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
+import 'package:to_do_application/core/utils/util_message.dart';
+import 'package:to_do_application/data/models/task_list_model.dart';
+import 'package:to_do_application/data/models/task_model.dart';
+import 'package:to_do_application/data/services/network_client.dart';
+import 'package:to_do_application/data/services/network_response.dart';
+import 'package:to_do_application/data/utils/app_urls.dart';
 import 'package:to_do_application/presentation/widgets/task_card_widget.dart';
 
 class ProgressTaskScreen extends StatefulWidget {
@@ -10,18 +16,37 @@ class ProgressTaskScreen extends StatefulWidget {
 }
 
 class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
-  List<String> date = [
-    '01-01-2025',
-    '02-01-2025',
-    '03-01-2025',
-    '04-01-2025',
-    '05-01-2025',
-    '06-01-2025',
-    '07-01-2025',
-    '08-01-2025',
-    '09-01-2025',
-    '10-01-2025',
-  ];
+  bool _getProgressTaskListInProgress = false;
+  List<TaskModel> _progressTaskList = [];
+
+  @override
+    void initState() {
+      super.initState();
+      _getProgressTaskList();
+    }
+
+  Future<void> _getProgressTaskList() async {
+    if (!mounted) return;
+    setState(() {
+      _getProgressTaskListInProgress = true;
+    });
+
+    final NetworkResponse response = await NetworkClient.getRequest(
+      url: AppURLs.taskListURL('Progress'),
+    );
+
+    if (response.isSuccess) {
+      TaskListModel taskListModel = TaskListModel.fromJson(response.data ?? {});
+      _progressTaskList = taskListModel.taskList;
+    } else {
+      Utils.snackBar(response.message, context);
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _getProgressTaskListInProgress = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,18 +54,25 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
       backgroundColor: AppColor.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: Expanded(
-          child: ListView.separated(
-            itemCount: date.length,
-            itemBuilder:
-                (context, index) => TaskCard(
-                  title: "This is title",
-                  subtitle: "This is subtitle",
-                  date: 'date',
-                  status: TaskStatus.progressTask,
-                  index: index,
-                ),
-            separatorBuilder: (context, index) => const SizedBox(height: 5),
+        child: Visibility(
+          visible: _getProgressTaskListInProgress == false,
+          replacement: Padding(
+            padding: const EdgeInsets.only(top: 50),
+            child: Center(child: const CircularProgressIndicator()),
+          ),
+          child: Expanded(
+            child: ListView.separated(
+              itemCount: _progressTaskList.length,
+              itemBuilder:
+                  (context, index) => TaskCard(
+                    title: _progressTaskList[index].title,
+                    subtitle: _progressTaskList[index].description,
+                    date: _progressTaskList[index].createdDate,
+                    status: TaskStatus.progressTask,
+                    index: index,
+                  ),
+              separatorBuilder: (context, index) => const SizedBox(height: 5),
+            ),
           ),
         ),
       ),
