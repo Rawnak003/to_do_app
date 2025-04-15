@@ -12,9 +12,9 @@ class Utils {
       fontSize: 16.0,
     );
   }
-  static snackBar(String message, BuildContext context) {
+  static snackBar(String? message, BuildContext context) {
     return ScaffoldMessenger.of(
       context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ).showSnackBar(SnackBar(content: Text(message!)));
   }
 }
