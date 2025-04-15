@@ -70,6 +70,8 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
                     date: _progressTaskList[index].createdDate,
                     status: TaskStatus.progressTask,
                     index: index,
+                    taskId: _progressTaskList[index].id,
+                    refreshList: _getProgressTaskList,
                   ),
               separatorBuilder: (context, index) => const SizedBox(height: 5),
             ),

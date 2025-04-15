@@ -22,10 +22,10 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
   @override
   void initState() {
     super.initState();
-    _getProgressTaskList();
+    _getCancelledTaskList();
   }
 
-  Future<void> _getProgressTaskList() async {
+  Future<void> _getCancelledTaskList() async {
     if (!mounted) return;
     setState(() {
       _getCancelledTaskListInProgress = true;
@@ -65,12 +65,14 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
               itemCount: _cancelledTaskList.length,
               itemBuilder:
                   (context, index) => TaskCard(
-                title: _cancelledTaskList[index].title,
-                subtitle: _cancelledTaskList[index].description,
-                date: _cancelledTaskList[index].createdDate,
-                status: TaskStatus.cancelledTask,
-                index: index,
-              ),
+                    title: _cancelledTaskList[index].title,
+                    subtitle: _cancelledTaskList[index].description,
+                    date: _cancelledTaskList[index].createdDate,
+                    status: TaskStatus.cancelledTask,
+                    index: index,
+                    taskId: _cancelledTaskList[index].id,
+                    refreshList: _getCancelledTaskList,
+                  ),
               separatorBuilder: (context, index) => const SizedBox(height: 5),
             ),
           ),

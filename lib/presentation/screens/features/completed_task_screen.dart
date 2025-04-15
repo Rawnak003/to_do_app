@@ -22,10 +22,10 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
   @override
   void initState() {
     super.initState();
-    _getProgressTaskList();
+    _getCompletedTaskList();
   }
 
-  Future<void> _getProgressTaskList() async {
+  Future<void> _getCompletedTaskList() async {
     if (!mounted) return;
     setState(() {
       _getCompletedTaskListInProgress = true;
@@ -65,12 +65,14 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
               itemCount: _completedTaskList.length,
               itemBuilder:
                   (context, index) => TaskCard(
-                title: _completedTaskList[index].title,
-                subtitle: _completedTaskList[index].description,
-                date: _completedTaskList[index].createdDate,
-                status: TaskStatus.completedTask,
-                index: index,
-              ),
+                    title: _completedTaskList[index].title,
+                    subtitle: _completedTaskList[index].description,
+                    date: _completedTaskList[index].createdDate,
+                    status: TaskStatus.completedTask,
+                    index: index,
+                    taskId: _completedTaskList[index].id,
+                    refreshList: _getCompletedTaskList,
+                  ),
               separatorBuilder: (context, index) => const SizedBox(height: 5),
             ),
           ),
