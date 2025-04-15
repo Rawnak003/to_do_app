@@ -93,8 +93,14 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     });
   }
 
-  void _onTapAddTask() {
-    Navigator.pushNamed(context, RoutesName.addTask);
+  Future<void> _onTapAddTask() async {
+    final isAdded = await Navigator.pushNamed(context, RoutesName.addTask);
+    if (isAdded == true) {
+      setState(() {
+        _getNewTaskList();
+        _getAllTaskStatusCount();
+      });
+    }
   }
 
   @override
@@ -107,7 +113,6 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
-
       floatingActionButton:
           _showFAB
               ? FloatingActionButton(

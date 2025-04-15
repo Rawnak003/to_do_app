@@ -64,6 +64,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     if (response.isSuccess) {
       _allCLear();
       FocusScope.of(context).unfocus();
+      Navigator.pop(context, true);
       Utils.toastMessage("New Task Added!");
     } else {
       Utils.toastMessage("Adding Failed!");
