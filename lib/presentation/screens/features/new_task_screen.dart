@@ -4,6 +4,8 @@ import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
 import 'package:to_do_application/data/models/task_count_list_model.dart';
 import 'package:to_do_application/data/models/task_count_model.dart';
+import 'package:to_do_application/data/models/task_list_model.dart';
+import 'package:to_do_application/data/models/task_model.dart';
 import 'package:to_do_application/data/services/network_client.dart';
 import 'package:to_do_application/data/services/network_response.dart';
 import 'package:to_do_application/data/utils/app_urls.dart';
@@ -20,26 +22,16 @@ class NewTaskScreen extends StatefulWidget {
 class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _getTaskCountInProgress = false;
   List<TaskCountModel> _taskCountList = [];
+  bool _getNewTaskListInProgress = false;
+  List<TaskModel> _newTaskList = [];
   final ScrollController _scrollController = ScrollController();
   bool _showFAB = true;
-
-  List<String> date = [
-    '01-01-2025',
-    '02-01-2025',
-    '03-01-2025',
-    '04-01-2025',
-    '05-01-2025',
-    '06-01-2025',
-    '07-01-2025',
-    '08-01-2025',
-    '09-01-2025',
-    '10-01-2025',
-  ];
 
   @override
   void initState() {
     super.initState();
     _getAllTaskStatusCount();
+    _getNewTaskList();
     _scrollController.addListener(() {
       if (_scrollController.offset > 0 && _showFAB) {
         setState(() {
@@ -78,6 +70,29 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
     });
   }
 
+  Future<void> _getNewTaskList() async {
+    if (!mounted) return;
+    setState(() {
+      _getNewTaskListInProgress = true;
+    });
+
+    final NetworkResponse response = await NetworkClient.getRequest(
+      url: AppURLs.taskListURL('New'),
+    );
+
+    if (response.isSuccess) {
+      TaskListModel taskListModel = TaskListModel.fromJson(response.data ?? {});
+      _newTaskList = taskListModel.taskList;
+    } else {
+      Utils.snackBar(response.message, context);
+    }
+
+    if (!mounted) return;
+    setState(() {
+      _getNewTaskListInProgress = false;
+    });
+  }
+
   void _onTapAddTask() {
     Navigator.pushNamed(context, RoutesName.addTask);
   }
@@ -106,21 +121,35 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            _taskStatusCountShow(),
+            Visibility(
+              visible: _getTaskCountInProgress == false,
+              replacement: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(child: const CircularProgressIndicator()),
+              ),
+              child: _taskStatusCountShow(),
+            ),
             const SizedBox(height: 5),
-            Expanded(
-              child: ListView.separated(
-                controller: _scrollController,
-                itemCount: date.length,
-                itemBuilder:
-                    (context, index) => TaskCard(
-                      title: "This is title",
-                      subtitle: "This is subtitle",
-                      date: date,
-                      status: TaskStatus.newTask,
-                      index: index,
-                    ),
-                separatorBuilder: (context, index) => const SizedBox(height: 2),
+            Visibility(
+              visible: _getNewTaskListInProgress == false,
+              replacement: Padding(
+                padding: const EdgeInsets.only(top: 200),
+                child: Center(child: const CircularProgressIndicator()),
+              ),
+              child: Expanded(
+                child: ListView.separated(
+                  controller: _scrollController,
+                  itemCount: _newTaskList.length,
+                  itemBuilder:
+                      (context, index) => TaskCard(
+                        title: _newTaskList[index].title,
+                        subtitle: _newTaskList[index].description,
+                        date: _newTaskList[index].createdDate,
+                        status: TaskStatus.newTask,
+                        index: index,
+                      ),
+                  separatorBuilder: (context, index) => const SizedBox(height: 2),
+                ),
               ),
             ),
           ],

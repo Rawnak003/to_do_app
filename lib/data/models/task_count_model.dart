@@ -9,7 +9,7 @@ class TaskCountModel {
 
   factory TaskCountModel.fromJson(Map<String, dynamic> jsonData) {
     return TaskCountModel(
-      taskCount: jsonData['sum'],
+      taskCount: jsonData['sum'] ?? 0,
       taskStatus: jsonData['_id'],
     );
   }

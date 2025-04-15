@@ -36,7 +36,7 @@ class _CompletedTaskScreenState extends State<CompletedTaskScreen> {
                 (context, index) => TaskCard(
               title: "This is title",
               subtitle: "This is subtitle",
-              date: date,
+              date: 'date',
               status: TaskStatus.completedTask,
               index: index,
             ),

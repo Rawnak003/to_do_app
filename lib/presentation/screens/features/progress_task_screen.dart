@@ -36,7 +36,7 @@ class _ProgressTaskScreenState extends State<ProgressTaskScreen> {
                 (context, index) => TaskCard(
                   title: "This is title",
                   subtitle: "This is subtitle",
-                  date: date,
+                  date: 'date',
                   status: TaskStatus.progressTask,
                   index: index,
                 ),

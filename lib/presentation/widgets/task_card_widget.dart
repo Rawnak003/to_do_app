@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 
 enum TaskStatus { newTask, progressTask, completedTask, cancelledTask }
@@ -11,7 +12,7 @@ class TaskCard extends StatelessWidget {
   final TaskStatus status;
   final String title;
   final String subtitle;
-  final List date;
+  final String date;
   final int index;
 
   Color _getChipColor (){
@@ -44,6 +45,11 @@ class TaskCard extends StatelessWidget {
     return st;
   }
 
+  String _getDate (){
+    DateTime unFormattedDate = DateTime.parse(date);
+    return DateFormat('yyyy-MM-dd').format(unFormattedDate);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -56,7 +62,8 @@ class TaskCard extends StatelessWidget {
           children: [
             Text(title, style: Theme.of(context).textTheme.titleLarge?.copyWith(fontSize: 18,fontWeight: FontWeight.w600),),
             Text(subtitle),
-            Text("Date: ${date[index]}"),
+
+            Text("Date: ${_getDate()}"),
             Row(
               children: [
                 Chip(

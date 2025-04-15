@@ -36,7 +36,7 @@ class _CancelledTaskScreenState extends State<CancelledTaskScreen> {
                 (context, index) => TaskCard(
               title: "This is title",
               subtitle: "This is subtitle",
-              date: date,
+              date: 'date',
               status: TaskStatus.cancelledTask,
               index: index,
             ),
