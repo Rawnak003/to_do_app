@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/presentation/screens/authentication/forget_pass_screen.dart';
-import 'package:to_do_application/presentation/screens/authentication/forget_password_pin_verify_screen.dart';
 import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
 import 'package:to_do_application/presentation/screens/authentication/register_screen.dart';
-import 'package:to_do_application/presentation/screens/authentication/reset_password_screen.dart';
 import 'package:to_do_application/presentation/screens/features/add_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/cancelled_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/completed_task_screen.dart';
@@ -28,14 +26,6 @@ class Routes {
       case RoutesName.forgetPassword:
         return MaterialPageRoute(
           builder: (BuildContext context) => const ForgetPasswordScreen(),
-        );
-      case RoutesName.forgetPasswordPinVerify:
-        return MaterialPageRoute(
-          builder: (BuildContext context) => const ForgetPasswordPINVerifyScreen(),
-        );
-      case RoutesName.resetPassword:
-        return MaterialPageRoute(
-          builder: (BuildContext context) => const ResetPasswordScreen(),
         );
       case RoutesName.mainBottomNav:
         return MaterialPageRoute(

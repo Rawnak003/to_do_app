@@ -3,11 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
+import 'package:to_do_application/core/utils/util_message.dart';
+import 'package:to_do_application/data/services/network_client.dart';
+import 'package:to_do_application/data/services/network_response.dart';
+import 'package:to_do_application/data/utils/app_urls.dart';
 import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
 class ResetPasswordScreen extends StatefulWidget {
-  const ResetPasswordScreen({super.key});
+  const ResetPasswordScreen({super.key, required this.userEmail, required this.userOTP});
+
+  final String userEmail;
+  final String userOTP;
+
 
   @override
   State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
@@ -38,11 +46,53 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 
   Future<void> _resetPassword() async {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.login,
-          (pre) => false,
+    if (!mounted) return;
+    setState(() {
+      _reSetInProgress = true;
+    });
+
+    Map<String, dynamic> requestBody = {
+      "email": widget.userEmail,
+      "OTP": widget.userOTP,
+    };
+
+    if (_newPasswordTEController.text.isNotEmpty && _confirmNewPasswordTEController.text.isNotEmpty) {
+      if (_newPasswordTEController.text != _confirmNewPasswordTEController.text) {
+        Utils.snackBar("The Passwords do not match", context);
+        setState(() {
+          _reSetInProgress = false;
+        });
+        return;
+      }
+      requestBody["password"] = _newPasswordTEController.text;
+    }
+
+    NetworkResponse response = await NetworkClient.postRequest(
+      url: AppURLs.resetPasswordURL,
+      body: requestBody,
     );
+
+    if (!mounted) return;
+    setState(() {
+      _reSetInProgress = false;
+    });
+
+    if (response.isSuccess) {
+      Utils.toastMessage("Reset Password Successful!");
+      _allClear();
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RoutesName.login,
+            (pre) => false,
+      );
+    } else {
+      Utils.toastMessage("Reset Password Failed!");
+    }
+  }
+
+  _allClear(){
+    _newPasswordTEController.clear();
+    _confirmNewPasswordTEController.clear();
   }
 
   @override

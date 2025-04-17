@@ -7,5 +7,10 @@ class AppURLs{
   static const String taskStatusCountURL = "$_baseUrl/taskStatusCount";
   static String taskListURL(String status) => "$_baseUrl/listTaskByStatus/$status";
 
-  static String deleteTaskUrl(String taskId) => '$_baseUrl/deleteTask/$taskId';}
+  static String deleteTaskUrl(String taskId) => '$_baseUrl/deleteTask/$taskId';
+
+  static String verifyEmailURL(String email) => '$_baseUrl/RecoverVerifyEmail/$email';
+  static String verifyPinURL(String email, String pin) => '$_baseUrl/RecoverVerifyOtp/$email/$pin';
+  static const String resetPasswordURL = "$_baseUrl/RecoverResetPassword";
+}
 
