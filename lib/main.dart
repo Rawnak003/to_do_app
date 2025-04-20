@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_application/app.dart';
+import 'package:to_do_application/presentation/controllers/auth_controller.dart';
 
-void main() {
-  runApp(const TaskManagerApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await AuthController.getUserInformation(); // this hydrates userModel
+  runApp(TaskManagerApp());
 }

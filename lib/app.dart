@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/core/routes/app_routes.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/themes/button_theme.dart';
 import 'package:to_do_application/core/themes/input_decoration.dart';
 import 'package:to_do_application/core/themes/text_themes.dart';
-import 'package:to_do_application/presentation/screens/splash_screen.dart';
 
-class TaskManagerApp extends StatelessWidget {
+class TaskManagerApp extends StatefulWidget {
   const TaskManagerApp({super.key});
 
+  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+  @override
+  State<TaskManagerApp> createState() => _TaskManagerAppState();
+}
+
+class _TaskManagerAppState extends State<TaskManagerApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: TaskManagerApp.navigatorKey,
       debugShowCheckedModeBanner: false,
       title: AppStrings.appName,
       theme: ThemeData(
@@ -20,7 +29,8 @@ class TaskManagerApp extends StatelessWidget {
         elevatedButtonTheme: AppButtonTheme.buttonTheme(),
         textTheme: AppTextTheme.appTextTheme(),
       ),
-      home: SplashScreen(),
+      initialRoute: RoutesName.splash,
+      onGenerateRoute: Routes.generateRoute,
     );
   }
 }

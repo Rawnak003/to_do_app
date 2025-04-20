@@ -2,11 +2,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
-import 'package:to_do_application/presentation/screens/authentication/forget_pass_screen.dart';
-import 'package:to_do_application/presentation/screens/authentication/register_screen.dart';
-import 'package:to_do_application/presentation/screens/main_bottom_nav_screen.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
+import 'package:to_do_application/core/utils/util_message.dart';
+import 'package:to_do_application/data/models/auth_model.dart';
+import 'package:to_do_application/data/services/network_client.dart';
+import 'package:to_do_application/data/services/network_response.dart';
+import 'package:to_do_application/data/utils/app_urls.dart';
+import 'package:to_do_application/presentation/controllers/auth_controller.dart';
+import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
-
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -19,27 +23,63 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _loginInProgress = false;
+  bool obscurePassword = true;
 
   void _onTapLogin() {
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => MainBottomNavScreen()),
-      (pre) => false,
+    if (_formKey.currentState!.validate()) {
+      _loginUser();
+    }
+  }
+
+  Future<void> _loginUser() async {
+    if (!mounted) return;
+    setState(() {
+      _loginInProgress = true;
+    });
+
+    Map<String, dynamic> requestBody = {
+      "email": _emailTEController.text.trim(),
+      "password": _passwordTEController.text,
+    };
+
+    NetworkResponse response = await NetworkClient.postRequest(
+      url: AppURLs.loginURL,
+      body: requestBody,
     );
+
+    if (!mounted) return;
+    setState(() {
+      _loginInProgress = false;
+    });
+
+    if (response.isSuccess) {
+      AuthModel loginModel = AuthModel.fromJson(response.data!);
+      AuthController.saveUserInformation(loginModel.token, loginModel.userModel);
+      AuthController.saveUserPass(_passwordTEController.text);
+      Utils.toastMessage("Login Successfully!");
+      _allClear();
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        RoutesName.mainBottomNav,
+        (pre) => false,
+      );
+    } else {
+      Utils.toastMessage("Login Failed!");
+    }
+  }
+
+  _allClear() {
+    _emailTEController.clear();
+    _passwordTEController.clear();
   }
 
   void _onTapRegister() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RegisterScreen()),
-    );
+    Navigator.pushNamed(context, RoutesName.register);
   }
 
   void _onTapForgetPassword() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ForgetPasswordScreen()),
-    );
+    Navigator.pushNamed(context, RoutesName.forgetPassword);
   }
 
   @override
@@ -73,21 +113,58 @@ class _LoginScreenState extends State<LoginScreen> {
                       keyboardType: TextInputType.emailAddress,
                       controller: _emailTEController,
                       decoration: InputDecoration(hintText: AppStrings.email),
+                      validator: (String? value) {
+                        String email = value?.trim() ?? '';
+                        RegExp regEx = RegExp(
+                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                        );
+                        if (regEx.hasMatch(email) == false) {
+                          return 'Please enter valid email';
+                        }
+                        return null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 10),
                     TextFormField(
                       controller: _passwordTEController,
+                      obscureText: obscurePassword,
+                      obscuringCharacter: '*',
                       decoration: InputDecoration(
                         hintText: AppStrings.password,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            obscurePassword
+                                ? Icons.visibility
+                                : Icons.visibility_off_outlined,
+                            color: obscurePassword ? AppColor.primaryColor : AppColor.greyColor,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              obscurePassword = !obscurePassword;
+                            });
+                          },
+                        ),
                       ),
+                      validator: (String? value) {
+                        if ((value?.isEmpty ?? true) || (value!.length < 6)) {
+                          return 'Please enter password with at least 6 letters';
+                        }
+                        return null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 25),
-                    ElevatedButton(
-                      onPressed: () => _onTapLogin(),
-                      child: const Icon(
-                        Icons.arrow_circle_right_outlined,
-                        size: 32,
-                        color: AppColor.whiteColor,
+                    Visibility(
+                      visible: _loginInProgress == false,
+                      replacement: CenterCircularIndicatorWidget(),
+                      child: ElevatedButton(
+                        onPressed: () => _onTapLogin(),
+                        child: const Icon(
+                          Icons.arrow_circle_right_outlined,
+                          size: 32,
+                          color: AppColor.whiteColor,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 35),

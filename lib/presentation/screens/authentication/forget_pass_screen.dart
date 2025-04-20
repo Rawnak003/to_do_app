@@ -2,8 +2,12 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
+import 'package:to_do_application/core/utils/util_message.dart';
+import 'package:to_do_application/data/services/network_client.dart';
+import 'package:to_do_application/data/services/network_response.dart';
+import 'package:to_do_application/data/utils/app_urls.dart';
 import 'package:to_do_application/presentation/screens/authentication/forget_password_pin_verify_screen.dart';
-import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
 
@@ -17,22 +21,50 @@ class ForgetPasswordScreen extends StatefulWidget {
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _getTheEmailVerifiedInProcess = false;
 
   void _onTapLogin() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.pushNamedAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const LoginScreen()),
+      RoutesName.login,
       (pre) => false,
     );
   }
 
   void _onTapNextButton() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const ForgetPasswordPINVerifyScreen(),
-      ),
+    if(_formKey.currentState!.validate()) {
+      _verifyTheEmail();
+    }
+  }
+
+  Future<void> _verifyTheEmail() async {
+    if (!mounted) return;
+    setState(() {
+      _getTheEmailVerifiedInProcess = true;
+    });
+
+    final NetworkResponse response = await NetworkClient.getRequest(
+      url: AppURLs.verifyEmailURL(_emailTEController.text.trim()),
     );
+
+    if (!mounted) return;
+    setState(() {
+      _getTheEmailVerifiedInProcess = false;
+    });
+
+    if (response.isSuccess) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ForgetPasswordPINVerifyScreen(
+            userEmail: _emailTEController.text.trim(),
+          ),
+        ),
+      );
+      Utils.toastMessage("A 6 digit OTP code sent to your email");
+    } else {
+      Utils.snackBar(response.message, context);
+    }
   }
 
   @override
@@ -70,14 +102,29 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       keyboardType: TextInputType.emailAddress,
                       controller: _emailTEController,
                       decoration: InputDecoration(hintText: AppStrings.email),
+                      validator: (String? value) {
+                        String email = value?.trim() ?? '';
+                        RegExp regEx = RegExp(
+                          r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+                        );
+                        if (regEx.hasMatch(email) == false) {
+                          return 'Please enter valid email';
+                        }
+                        return null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 25),
-                    ElevatedButton(
-                      onPressed: () => _onTapNextButton(),
-                      child: const Icon(
-                        Icons.arrow_circle_right_outlined,
-                        size: 32,
-                        color: AppColor.whiteColor,
+                    Visibility(
+                      visible: _getTheEmailVerifiedInProcess == false,
+                      replacement: const CircularProgressIndicator(),
+                      child: ElevatedButton(
+                        onPressed: () => _onTapNextButton(),
+                        child: const Icon(
+                          Icons.arrow_circle_right_outlined,
+                          size: 32,
+                          color: AppColor.whiteColor,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 45),

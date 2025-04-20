@@ -3,29 +3,73 @@ import 'package:flutter/material.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
-import 'package:to_do_application/presentation/screens/authentication/login_screen.dart';
+import 'package:to_do_application/core/routes/routes_name.dart';
+import 'package:to_do_application/core/utils/util_message.dart';
+import 'package:to_do_application/data/services/network_client.dart';
+import 'package:to_do_application/data/services/network_response.dart';
+import 'package:to_do_application/data/utils/app_urls.dart';
 import 'package:to_do_application/presentation/screens/authentication/reset_password_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
-
 class ForgetPasswordPINVerifyScreen extends StatefulWidget {
-  const ForgetPasswordPINVerifyScreen({super.key});
+  const ForgetPasswordPINVerifyScreen({super.key, required this.userEmail});
+
+  final String userEmail;
 
   @override
-  State<ForgetPasswordPINVerifyScreen> createState() => _ForgetPasswordPINVerifyScreenState();
+  State<ForgetPasswordPINVerifyScreen> createState() =>
+      _ForgetPasswordPINVerifyScreenState();
 }
 
-class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyScreen> {
-
+class _ForgetPasswordPINVerifyScreenState
+    extends State<ForgetPasswordPINVerifyScreen> {
   final TextEditingController _pinInputTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _getThePinVerifiedInProcess = false;
 
-  void _onTapLogin(){
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const LoginScreen()), (pre) => false);
+  void _onTapLogin() {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      RoutesName.login,
+          (pre) => false,
+    );
   }
 
-  void _onTapVerifyButton(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => const ResetPasswordScreen()));
+  void _onTapVerifyButton() {
+    if (_formKey.currentState!.validate()) {
+      _verifyThePin();
+    }
+  }
+
+  Future<void> _verifyThePin() async {
+    if (!mounted) return;
+    setState(() {
+      _getThePinVerifiedInProcess = true;
+    });
+
+    final NetworkResponse response = await NetworkClient.getRequest(
+      url: AppURLs.verifyPinURL(widget.userEmail, _pinInputTEController.text.trim()),
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _getThePinVerifiedInProcess = false;
+    });
+
+    if (response.isSuccess) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ResetPasswordScreen(
+            userEmail: widget.userEmail,
+            userOTP: _pinInputTEController.text.trim(),
+          ),
+        ),
+      );
+      Utils.toastMessage("Pin verified Successfully");
+    } else {
+      Utils.snackBar(response.message, context);
+    }
   }
 
   @override
@@ -81,35 +125,53 @@ class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyS
                       enableActiveFill: true,
                       controller: _pinInputTEController,
                       appContext: context,
+                      validator: (String? value) {
+                        String pin = value?.trim() ?? '';
+                        final RegExp pinRegex = RegExp(r'^\d{6}$');
+                        if (pinRegex.hasMatch(pin) == false) {
+                          return 'Please enter valid Pin';
+                        }
+                        return null;
+                      },
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 25),
-                    ElevatedButton(
-                      onPressed: () => _onTapVerifyButton(),
-                      child: Text(
-                        AppStrings.verify,
-                        style: Theme.of(context).textTheme.titleMedium,
-                      )
+                    Visibility(
+                      visible: _getThePinVerifiedInProcess == false,
+                      replacement: const CircularProgressIndicator(),
+                      child: ElevatedButton(
+                        onPressed: () => _onTapVerifyButton(),
+                        child: Text(
+                          AppStrings.verify,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 45),
-                    RichText(text: TextSpan(children: [
-                      TextSpan(
-                        text: AppStrings.alreadyHaveAccount,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: AppColor.blackColor,
-                        ),
+                    RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: AppStrings.alreadyHaveAccount,
+                            style: TextStyle(
+                              fontSize: 16,
+                              color: AppColor.blackColor,
+                            ),
+                          ),
+                          TextSpan(
+                            text: AppStrings.login,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: AppColor.primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            recognizer:
+                                TapGestureRecognizer()
+                                  ..onTap = () => _onTapLogin(),
+                          ),
+                        ],
                       ),
-                      TextSpan(
-                        text: AppStrings.login,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: AppColor.primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () => _onTapLogin(),
-                      ),
-                    ])),
+                    ),
                   ],
                 ),
               ),
