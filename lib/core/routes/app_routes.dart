@@ -9,7 +9,7 @@ import 'package:to_do_application/presentation/screens/features/completed_task_s
 import 'package:to_do_application/presentation/screens/features/new_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/progress_task_screen.dart';
 import 'package:to_do_application/presentation/screens/features/update_profile_screen.dart';
-import 'package:to_do_application/presentation/screens/main_bottom_nav_screen.dart';
+import 'package:to_do_application/presentation/screens/parent_screen/main_bottom_nav_screen.dart';
 import 'package:to_do_application/presentation/screens/splash_screen.dart';
 
 class Routes {

@@ -64,7 +64,9 @@ class TaskCard extends StatelessWidget {
     return DateFormat('yyyy-MM-dd').format(unFormattedDate);
   }
 
-  void _onTapEditStatusButton() {}
+  void _onTapEditStatusButton() {
+
+  }
 
   Future<void> _onTapDeleteTaskButton(BuildContext context) async {
     final NetworkResponse response = await NetworkClient.getRequest(

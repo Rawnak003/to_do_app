@@ -22,7 +22,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final TextEditingController _taskDescriptionTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool addNewTaskInProgress = false;
-  AutovalidateMode _autoValidateMode = AutovalidateMode.onUnfocus;
+  final AutovalidateMode _autoValidateMode = AutovalidateMode.onUnfocus;
 
 
   @override

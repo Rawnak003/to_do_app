@@ -6,7 +6,7 @@ class AppURLs{
   static const String addNewTaskURL = "$_baseUrl/createTask";
   static const String taskStatusCountURL = "$_baseUrl/taskStatusCount";
   static String taskListURL(String status) => "$_baseUrl/listTaskByStatus/$status";
-
+  static String updateTaskStatusURL(String id, String status) => "$_baseUrl/updateTaskStatus/$id/$status";
   static String deleteTaskUrl(String taskId) => '$_baseUrl/deleteTask/$taskId';
 
   static String verifyEmailURL(String email) => '$_baseUrl/RecoverVerifyEmail/$email';
