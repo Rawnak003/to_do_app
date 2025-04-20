@@ -1,16 +1,4 @@
 # to_do_application
 
-An advanced to do applcation using Api
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![image alt](https://github.com/Rawnak003/to_do_app/blob/1d8e4f09e986e5ee9a41eb49c9be4b5e73a513f8/Screenshot%202025-04-20%20095415.png)
