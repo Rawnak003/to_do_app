@@ -29,7 +29,7 @@ class Routes {
         );
       case RoutesName.mainBottomNav:
         return MaterialPageRoute(
-          builder: (BuildContext context) => const MainBottomNavScreen(),
+          builder: (BuildContext context) => MainBottomNavScreen(),
         );
       case RoutesName.newTask:
         return MaterialPageRoute(
