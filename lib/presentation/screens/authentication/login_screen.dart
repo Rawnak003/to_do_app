@@ -1,14 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
-import 'package:to_do_application/data/models/auth_model.dart';
-import 'package:to_do_application/data/services/network_client.dart';
-import 'package:to_do_application/data/services/network_response.dart';
-import 'package:to_do_application/data/utils/app_urls.dart';
-import 'package:to_do_application/presentation/controllers/auth_controller.dart';
+import 'package:to_do_application/presentation/controllers/login_controller.dart';
 import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
@@ -22,8 +19,8 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
+  final LoginController _loginController = Get.find<LoginController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _loginInProgress = false;
   bool obscurePassword = true;
 
   void _onTapLogin() {
@@ -33,31 +30,12 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginUser() async {
-    if (!mounted) return;
-    setState(() {
-      _loginInProgress = true;
-    });
-
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "password": _passwordTEController.text,
-    };
-
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: AppURLs.loginURL,
-      body: requestBody,
+    final isLoginSuccess = await _loginController.loginUser(
+      _emailTEController.text.trim(),
+      _passwordTEController.text,
     );
-
-    if (!mounted) return;
-    setState(() {
-      _loginInProgress = false;
-    });
-
-    if (response.isSuccess) {
-      AuthModel loginModel = AuthModel.fromJson(response.data!);
-      AuthController.saveUserInformation(loginModel.token, loginModel.userModel);
-      AuthController.saveUserPass(_passwordTEController.text);
-      Utils.toastMessage("Login Successfully!");
+    if (isLoginSuccess) {
+      Utils.toastMessage(_loginController.message!);
       _allClear();
       Navigator.pushNamedAndRemoveUntil(
         context,
@@ -65,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
         (pre) => false,
       );
     } else {
-      Utils.toastMessage("Login Failed!");
+      Utils.toastMessage(_loginController.message!);
     }
   }
 
@@ -137,7 +115,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             obscurePassword
                                 ? Icons.visibility
                                 : Icons.visibility_off_outlined,
-                            color: obscurePassword ? AppColor.primaryColor : AppColor.greyColor,
+                            color:
+                                obscurePassword
+                                    ? AppColor.primaryColor
+                                    : AppColor.greyColor,
                           ),
                           onPressed: () {
                             setState(() {
@@ -155,17 +136,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 25),
-                    Visibility(
-                      visible: _loginInProgress == false,
-                      replacement: CenterCircularIndicatorWidget(),
-                      child: ElevatedButton(
-                        onPressed: () => _onTapLogin(),
-                        child: const Icon(
-                          Icons.arrow_circle_right_outlined,
-                          size: 32,
-                          color: AppColor.whiteColor,
-                        ),
-                      ),
+                    GetBuilder<LoginController>(
+                      builder: (controller) {
+                        return Visibility(
+                          visible: controller.loginInProgress == false,
+                          replacement: CenterCircularIndicatorWidget(),
+                          child: ElevatedButton(
+                            onPressed: () => _onTapLogin(),
+                            child: const Icon(
+                              Icons.arrow_circle_right_outlined,
+                              size: 32,
+                              color: AppColor.whiteColor,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 35),
                     Column(
