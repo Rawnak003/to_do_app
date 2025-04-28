@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
@@ -94,7 +95,8 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Future<void> _onTapAddTask() async {
-    final isAdded = await Navigator.pushNamed(context, RoutesName.addTask);
+    final isAdded = await Get.toNamed(RoutesName.addTask);
+
     if (isAdded == true) {
       setState(() {
         _getNewTaskList();

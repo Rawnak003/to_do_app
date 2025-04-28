@@ -32,7 +32,7 @@ class _TaskManagerAppState extends State<TaskManagerApp> {
         textTheme: AppTextTheme.appTextTheme(),
       ),
       initialRoute: RoutesName.splash,
-      onGenerateRoute: Routes.generateRoute,
+      getPages: AppRoutes.pages,
       initialBinding: ControllerBinder(),
     );
   }

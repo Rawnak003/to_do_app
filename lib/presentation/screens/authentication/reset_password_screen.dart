@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
@@ -32,11 +33,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   bool obscurePassword2 = true;
 
   void _onTapLogin() {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.login,
-      (pre) => false,
-    );
+    Get.offAllNamed(RoutesName.login);
   }
 
   void _onTapSubmitButton() {
@@ -80,11 +77,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     if (response.isSuccess) {
       Utils.toastMessage("Reset Password Successful!");
       _allClear();
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        RoutesName.login,
-            (pre) => false,
-      );
+      Get.offAllNamed(RoutesName.login);
     } else {
       Utils.toastMessage("Reset Password Failed!");
     }

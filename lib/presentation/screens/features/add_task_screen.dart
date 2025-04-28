@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
@@ -64,7 +65,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     if (response.isSuccess) {
       _allCLear();
       FocusScope.of(context).unfocus();
-      Navigator.pop(context, true);
+      Get.back(result: true);
       Utils.toastMessage("New Task Added!");
     } else {
       Utils.toastMessage("Adding Failed!");

@@ -37,11 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (isLoginSuccess) {
       Utils.toastMessage(_loginController.message!);
       _allClear();
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        RoutesName.mainBottomNav,
-        (pre) => false,
-      );
+      Get.offAllNamed(RoutesName.mainBottomNav);
     } else {
       Utils.toastMessage(_loginController.message!);
     }
@@ -53,11 +49,11 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _onTapRegister() {
-    Navigator.pushNamed(context, RoutesName.register);
+    Get.toNamed(RoutesName.register);
   }
 
   void _onTapForgetPassword() {
-    Navigator.pushNamed(context, RoutesName.forgetPassword);
+    Get.toNamed(RoutesName.forgetPassword);
   }
 
   @override

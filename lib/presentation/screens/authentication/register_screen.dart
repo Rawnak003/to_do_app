@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
@@ -28,11 +29,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool registrationInProgress = false;
 
   void _onTapLogin(){
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.login,
-          (pre) => false,
-    );
+    Get.offAllNamed(RoutesName.login);
   }
 
   void _onTapSubmitButton() {
@@ -68,11 +65,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (response.isSuccess) {
       Utils.toastMessage("Registration Successful!");
       _allClear();
-      Navigator.pushNamedAndRemoveUntil(
-        context,
-        RoutesName.login,
-            (pre) => false,
-      );
+      Get.offAllNamed(RoutesName.login);
     } else {
       Utils.toastMessage("Registration Failed!");
     }
