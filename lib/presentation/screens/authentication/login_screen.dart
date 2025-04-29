@@ -6,6 +6,7 @@ import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
 import 'package:to_do_application/presentation/controllers/login_controller.dart';
+import 'package:to_do_application/presentation/controllers/show_password_controller.dart';
 import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
@@ -30,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _loginUser() async {
-    final isLoginSuccess = await _loginController.loginUser(
+    final bool isLoginSuccess = await _loginController.loginUser(
       _emailTEController.text.trim(),
       _passwordTEController.text,
     );
@@ -100,36 +101,35 @@ class _LoginScreenState extends State<LoginScreen> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _passwordTEController,
-                      obscureText: obscurePassword,
-                      obscuringCharacter: '*',
-                      decoration: InputDecoration(
-                        hintText: AppStrings.password,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            obscurePassword
-                                ? Icons.visibility
-                                : Icons.visibility_off_outlined,
-                            color:
-                                obscurePassword
+                    GetBuilder<ShowPasswordController>(
+                      builder: (controller) {
+                        return TextFormField(
+                          controller: _passwordTEController,
+                          obscureText: controller.obscurePassword,
+                          obscuringCharacter: '*',
+                          decoration: InputDecoration(
+                            hintText: AppStrings.password,
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                controller.obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off_outlined,
+                                color: controller.obscurePassword
                                     ? AppColor.primaryColor
                                     : AppColor.greyColor,
+                              ),
+                              onPressed: controller.toggleObscure,
+                            ),
                           ),
-                          onPressed: () {
-                            setState(() {
-                              obscurePassword = !obscurePassword;
-                            });
+                          validator: (String? value) {
+                            if ((value?.isEmpty ?? true) || value!.length < 6) {
+                              return 'Please enter password with at least 6 letters';
+                            }
+                            return null;
                           },
-                        ),
-                      ),
-                      validator: (String? value) {
-                        if ((value?.isEmpty ?? true) || (value!.length < 6)) {
-                          return 'Please enter password with at least 6 letters';
-                        }
-                        return null;
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                        );
                       },
-                      autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 25),
                     GetBuilder<LoginController>(

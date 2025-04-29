@@ -43,7 +43,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 
   Future<void> _resetPassword() async {
-    final isResetSuccess = await _resetPasswordController.resetPassword(
+    final bool isResetSuccess = await _resetPasswordController.resetPassword(
       widget.userEmail,
       widget.userOTP,
       _newPasswordTEController.text.trim(),
