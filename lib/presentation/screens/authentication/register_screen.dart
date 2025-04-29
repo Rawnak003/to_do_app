@@ -5,9 +5,7 @@ import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
-import 'package:to_do_application/data/services/network_client.dart';
-import 'package:to_do_application/data/services/network_response.dart';
-import 'package:to_do_application/data/utils/app_urls.dart';
+import 'package:to_do_application/presentation/controllers/register_controller.dart';
 import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
@@ -26,7 +24,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _phoneTEController = TextEditingController();
   final TextEditingController _passwordTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool registrationInProgress = false;
+  final RegisterController _registerController = Get.find<RegisterController>();
 
   void _onTapLogin(){
     Get.offAllNamed(RoutesName.login);
@@ -39,30 +37,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _registerUser() async {
-    if (!mounted) return;
-    setState(() {
-      registrationInProgress = true;
-    });
-
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _phoneTEController.text.trim(),
-      "password": _passwordTEController.text,
-    };
-
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: AppURLs.registerURL,
-      body: requestBody,
+    final isRegisterSuccess = await _registerController.registerUser(
+      _emailTEController.text.trim(),
+      _firstNameTEController.text.trim(),
+      _lastNameTEController.text.trim(),
+      _phoneTEController.text.trim(),
+      _passwordTEController.text,
     );
-
-    if (!mounted) return;
-    setState(() {
-      registrationInProgress = false;
-    });
-
-    if (response.isSuccess) {
+    if (isRegisterSuccess) {
       Utils.toastMessage("Registration Successful!");
       _allClear();
       Get.offAllNamed(RoutesName.login);
@@ -178,17 +160,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 25),
-                    Visibility(
-                      visible: registrationInProgress == false,
-                      replacement: CenterCircularIndicatorWidget(),
-                      child: ElevatedButton(
-                        onPressed: () => _onTapSubmitButton(),
-                        child: const Icon(
-                          Icons.arrow_circle_right_outlined,
-                          size: 32,
-                          color: AppColor.whiteColor,
-                        ),
-                      ),
+                    GetBuilder<RegisterController>(
+                      builder: (controller) {
+                        return Visibility(
+                          visible: controller.registerInProgress == false,
+                          replacement: CenterCircularIndicatorWidget(),
+                          child: ElevatedButton(
+                            onPressed: () => _onTapSubmitButton(),
+                            child: const Icon(
+                              Icons.arrow_circle_right_outlined,
+                              size: 32,
+                              color: AppColor.whiteColor,
+                            ),
+                          ),
+                        );
+                      }
                     ),
                     const SizedBox(height: 45),
                     RichText(text: TextSpan(children: [

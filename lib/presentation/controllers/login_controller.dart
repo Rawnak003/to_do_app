@@ -41,5 +41,4 @@ class LoginController extends GetxController {
     update();
     return isLoginSuccess;
   }
-
 }
