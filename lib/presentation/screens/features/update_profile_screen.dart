@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/spacing.dart';
@@ -79,7 +80,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     if (response.isSuccess) {
       await AuthController.saveUpdatedUserDetailsToPrefsWithoutPassword(requestBody);
-      Navigator.pop(context, true);
+      Get.back(result: true);
       Utils.toastMessage("Update Successful!");
     } else {
       Utils.toastMessage("Update Failed!");
@@ -140,7 +141,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
 
     if (response.isSuccess) {
       await AuthController.saveUpdatedUserDetailsToPrefsWithPassword(requestBody);
-      Navigator.pop(context, true);
+      Get.back(result: true);
       _oldPasswordTEController.clear();
       _newPasswordTEController.clear();
       Utils.toastMessage("Password Update Successful!");

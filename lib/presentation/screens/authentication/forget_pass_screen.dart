@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
@@ -24,11 +25,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   bool _getTheEmailVerifiedInProcess = false;
 
   void _onTapLogin() {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.login,
-      (pre) => false,
-    );
+    Get.offAllNamed(RoutesName.login);
   }
 
   void _onTapNextButton() {
@@ -53,12 +50,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
     });
 
     if (response.isSuccess) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ForgetPasswordPINVerifyScreen(
-            userEmail: _emailTEController.text.trim(),
-          ),
+      Get.to(() => ForgetPasswordPINVerifyScreen(
+          userEmail: _emailTEController.text.trim(),
         ),
       );
       Utils.toastMessage("A 6 digit OTP code sent to your email");

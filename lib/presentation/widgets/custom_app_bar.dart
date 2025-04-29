@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
@@ -22,10 +23,7 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _CustomAppBarState extends State<CustomAppBar> {
   Future<void> _onTapProfile(BuildContext context) async {
-    final isUpdated = await Navigator.pushNamed(
-      context,
-      RoutesName.updateProfile,
-    );
+    final isUpdated = await Get.toNamed(RoutesName.updateProfile);
     if (isUpdated == true) {
       setState(() {});
     }
@@ -39,11 +37,11 @@ class _CustomAppBarState extends State<CustomAppBar> {
         content: const Text(AppStrings.logoutMessage),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Get.back(),
             child: const Text(AppStrings.cancel),
           ),
           TextButton(
-            onPressed: () => _onLogout(context),
+            onPressed: () => _onLogout(),
             child: const Text(AppStrings.logout),
           ),
         ],
@@ -51,13 +49,9 @@ class _CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
-  Future<void> _onLogout(BuildContext context) async {
+  Future<void> _onLogout() async {
     await AuthController.clearUserData();
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.login,
-      (pre) => false,
-    );
+    Get.offAllNamed(RoutesName.login);
   }
 
   bool _shouldShowImage(String? photo){

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/spacing.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/assets_path.dart';
@@ -24,11 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _moveToNextScreen() async {
     await Future.delayed(const Duration(seconds: 3));
     final bool isLoggedIn = await AuthController.checkIfUserLoggedIn();
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      isLoggedIn ? RoutesName.mainBottomNav : RoutesName.login,
-      (pre) => false,
-    );
+    Get.offAllNamed(isLoggedIn ? RoutesName.mainBottomNav : RoutesName.login);
   }
 
   @override

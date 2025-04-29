@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
@@ -92,7 +93,7 @@ class _TaskCardState extends State<TaskCard> {
               title: Text(label),
               trailing: _isSelected(label) ? const Icon(Icons.done) : null,
               onTap: () {
-                Navigator.pop(context);
+                Get.back();
                 if (!_isSelected(label)) _changeTaskStatus(label);
               },
             );
@@ -110,13 +111,13 @@ class _TaskCardState extends State<TaskCard> {
         content: const Text("Are you sure you want to delete this task?"),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Get.back(),
             child: const Text("Cancel"),
           ),
           TextButton(
             onPressed: () {
               _deleteTask();
-              Navigator.pop(context);
+              Get.back();
             },
             child: const Text("Delete"),
           ),

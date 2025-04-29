@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
@@ -28,11 +29,7 @@ class _ForgetPasswordPINVerifyScreenState
   bool _getThePinVerifiedInProcess = false;
 
   void _onTapLogin() {
-    Navigator.pushNamedAndRemoveUntil(
-      context,
-      RoutesName.login,
-          (pre) => false,
-    );
+    Get.offAllNamed(RoutesName.login);
   }
 
   void _onTapVerifyButton() {
@@ -57,13 +54,10 @@ class _ForgetPasswordPINVerifyScreenState
     });
 
     if (response.isSuccess) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ResetPasswordScreen(
-            userEmail: widget.userEmail,
-            userOTP: _pinInputTEController.text.trim(),
-          ),
+      Get.to(
+            () => ResetPasswordScreen(
+          userEmail: widget.userEmail,
+          userOTP: _pinInputTEController.text.trim(),
         ),
       );
       Utils.toastMessage("Pin verified Successfully");
