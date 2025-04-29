@@ -37,7 +37,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _registerUser() async {
-    final isRegisterSuccess = await _registerController.registerUser(
+    final bool isRegisterSuccess = await _registerController.registerUser(
       _emailTEController.text.trim(),
       _firstNameTEController.text.trim(),
       _lastNameTEController.text.trim(),

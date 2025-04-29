@@ -5,9 +5,7 @@ import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
-import 'package:to_do_application/data/services/network_client.dart';
-import 'package:to_do_application/data/services/network_response.dart';
-import 'package:to_do_application/data/utils/app_urls.dart';
+import 'package:to_do_application/presentation/controllers/forget_password_controller.dart';
 import 'package:to_do_application/presentation/screens/authentication/forget_password_pin_verify_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
@@ -22,7 +20,7 @@ class ForgetPasswordScreen extends StatefulWidget {
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   final TextEditingController _emailTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _getTheEmailVerifiedInProcess = false;
+  final ForgetPasswordController _forgetPasswordController = Get.find<ForgetPasswordController>();
 
   void _onTapLogin() {
     Get.offAllNamed(RoutesName.login);
@@ -35,28 +33,15 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   }
 
   Future<void> _verifyTheEmail() async {
-    if (!mounted) return;
-    setState(() {
-      _getTheEmailVerifiedInProcess = true;
-    });
-
-    final NetworkResponse response = await NetworkClient.getRequest(
-      url: AppURLs.verifyEmailURL(_emailTEController.text.trim()),
-    );
-
-    if (!mounted) return;
-    setState(() {
-      _getTheEmailVerifiedInProcess = false;
-    });
-
-    if (response.isSuccess) {
+    final bool isEmailVerified = await _forgetPasswordController.verifyTheEmail(_emailTEController.text.trim());
+    if (isEmailVerified) {
       Get.to(() => ForgetPasswordPINVerifyScreen(
           userEmail: _emailTEController.text.trim(),
         ),
       );
-      Utils.toastMessage("A 6 digit OTP code sent to your email");
+      Utils.toastMessage(_forgetPasswordController.message!);
     } else {
-      Utils.snackBar(response.message, context);
+      Get.snackbar("Error", _forgetPasswordController.message!);
     }
   }
 
@@ -108,17 +93,21 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 25),
-                    Visibility(
-                      visible: _getTheEmailVerifiedInProcess == false,
-                      replacement: const CircularProgressIndicator(),
-                      child: ElevatedButton(
-                        onPressed: () => _onTapNextButton(),
-                        child: const Icon(
-                          Icons.arrow_circle_right_outlined,
-                          size: 32,
-                          color: AppColor.whiteColor,
-                        ),
-                      ),
+                    GetBuilder<ForgetPasswordController>(
+                      builder: (controller) {
+                        return Visibility(
+                          visible: controller.getTheEmailVerifiedInProcess == false,
+                          replacement: const CircularProgressIndicator(),
+                          child: ElevatedButton(
+                            onPressed: () => _onTapNextButton(),
+                            child: const Icon(
+                              Icons.arrow_circle_right_outlined,
+                              size: 32,
+                              color: AppColor.whiteColor,
+                            ),
+                          ),
+                        );
+                      }
                     ),
                     const SizedBox(height: 45),
                     RichText(

@@ -6,9 +6,7 @@ import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
-import 'package:to_do_application/data/services/network_client.dart';
-import 'package:to_do_application/data/services/network_response.dart';
-import 'package:to_do_application/data/utils/app_urls.dart';
+import 'package:to_do_application/presentation/controllers/forget_password_pin_verify_controller.dart';
 import 'package:to_do_application/presentation/screens/authentication/reset_password_screen.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
 
@@ -22,11 +20,10 @@ class ForgetPasswordPINVerifyScreen extends StatefulWidget {
       _ForgetPasswordPINVerifyScreenState();
 }
 
-class _ForgetPasswordPINVerifyScreenState
-    extends State<ForgetPasswordPINVerifyScreen> {
+class _ForgetPasswordPINVerifyScreenState extends State<ForgetPasswordPINVerifyScreen> {
   final TextEditingController _pinInputTEController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool _getThePinVerifiedInProcess = false;
+  final ForgetPasswordPinVerifyController _forgetPasswordPinVerifyController = Get.find<ForgetPasswordPinVerifyController>();
 
   void _onTapLogin() {
     Get.offAllNamed(RoutesName.login);
@@ -39,30 +36,17 @@ class _ForgetPasswordPINVerifyScreenState
   }
 
   Future<void> _verifyThePin() async {
-    if (!mounted) return;
-    setState(() {
-      _getThePinVerifiedInProcess = true;
-    });
-
-    final NetworkResponse response = await NetworkClient.getRequest(
-      url: AppURLs.verifyPinURL(widget.userEmail, _pinInputTEController.text.trim()),
-    );
-
-    if (!mounted) return;
-    setState(() {
-      _getThePinVerifiedInProcess = false;
-    });
-
-    if (response.isSuccess) {
+    final bool isPinVerified = await _forgetPasswordPinVerifyController.verifyThePin(widget.userEmail, _pinInputTEController.text.trim());
+    if (isPinVerified) {
       Get.to(
             () => ResetPasswordScreen(
           userEmail: widget.userEmail,
           userOTP: _pinInputTEController.text.trim(),
         ),
       );
-      Utils.toastMessage("Pin verified Successfully");
+      Utils.toastMessage(_forgetPasswordPinVerifyController.message!);
     } else {
-      Utils.snackBar(response.message, context);
+      Get.snackbar("Error", _forgetPasswordPinVerifyController.message!);
     }
   }
 
@@ -130,16 +114,20 @@ class _ForgetPasswordPINVerifyScreenState
                       autovalidateMode: AutovalidateMode.onUserInteraction,
                     ),
                     const SizedBox(height: 25),
-                    Visibility(
-                      visible: _getThePinVerifiedInProcess == false,
-                      replacement: const CircularProgressIndicator(),
-                      child: ElevatedButton(
-                        onPressed: () => _onTapVerifyButton(),
-                        child: Text(
-                          AppStrings.verify,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ),
+                    GetBuilder<ForgetPasswordPinVerifyController>(
+                      builder: (controller) {
+                        return Visibility(
+                          visible: controller.getThePinVerifiedInProcess == false,
+                          replacement: const CircularProgressIndicator(),
+                          child: ElevatedButton(
+                            onPressed: () => _onTapVerifyButton(),
+                            child: Text(
+                              AppStrings.verify,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
+                        );
+                      }
                     ),
                     const SizedBox(height: 45),
                     RichText(
