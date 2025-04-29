@@ -62,7 +62,7 @@ class _TaskCardState extends State<TaskCard> {
       widget.refreshStatusCount?.call();
       widget.refreshList();
     } else {
-      Utils.snackBar(response.message, context);
+      Get.snackbar("Error", response.message!);
     }
   }
 
@@ -76,7 +76,7 @@ class _TaskCardState extends State<TaskCard> {
       widget.refreshList();
       Utils.toastMessage("Deleted");
     } else {
-      Utils.snackBar(response.message, context);
+      Get.snackbar("Error", response.message!);
     }
   }
 

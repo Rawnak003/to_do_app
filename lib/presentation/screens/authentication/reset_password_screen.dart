@@ -100,23 +100,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         return TextFormField(
                           textInputAction: TextInputAction.next,
                           controller: _newPasswordTEController,
-                          obscureText: controller.obscurePassword,
+                          obscureText: !controller.showNewPassword,
                           obscuringCharacter: '*',
                           decoration: InputDecoration(
                             hintText: AppStrings.newPassword,
                             suffixIcon: IconButton(
                               icon: Icon(
-                                controller.obscurePassword
+                                controller.showNewPassword
                                     ? Icons.visibility
                                     : Icons.visibility_off_outlined,
-                                color: controller.obscurePassword
+                                color: controller.showNewPassword
                                     ? AppColor.primaryColor
                                     : AppColor.greyColor,
                               ),
-                              onPressed: controller.toggleObscure,
+                              onPressed: controller.toggleNewPassword,
                             ),
                           ),
-                          validator: (String? value) {
+                          validator: (value) {
                             if ((value?.isEmpty ?? true) || value!.length < 6) {
                               return 'Please enter password with at least 6 letters';
                             }
@@ -131,23 +131,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       builder: (controller) {
                         return TextFormField(
                           controller: _confirmNewPasswordTEController,
-                          obscureText: controller.obscurePassword,
+                          obscureText: !controller.showConfirmPassword,
                           obscuringCharacter: '*',
                           decoration: InputDecoration(
                             hintText: AppStrings.confirmNewPassword,
                             suffixIcon: IconButton(
                               icon: Icon(
-                                controller.obscurePassword
+                                controller.showConfirmPassword
                                     ? Icons.visibility
                                     : Icons.visibility_off_outlined,
-                                color: controller.obscurePassword
+                                color: controller.showConfirmPassword
                                     ? AppColor.primaryColor
                                     : AppColor.greyColor,
                               ),
-                              onPressed: controller.toggleObscure,
+                              onPressed: controller.toggleConfirmPassword,
                             ),
                           ),
-                          validator: (String? value) {
+                          validator: (value) {
                             if ((value?.isEmpty ?? true) || value!.length < 6) {
                               return 'Please enter password with at least 6 letters';
                             }
@@ -157,6 +157,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                         );
                       },
                     ),
+
+
                     const SizedBox(height: 25),
                     GetBuilder<ResetPasswordController>(
                       builder: (controller) {

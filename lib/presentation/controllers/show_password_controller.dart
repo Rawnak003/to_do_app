@@ -1,10 +1,19 @@
 import 'package:get/get.dart';
 
 class ShowPasswordController extends GetxController {
-  bool obscurePassword = true;
+  bool _showNewPassword = false;
+  bool _showConfirmPassword = false;
 
-  void toggleObscure() {
-    obscurePassword = !obscurePassword;
+  bool get showNewPassword => _showNewPassword;
+  bool get showConfirmPassword => _showConfirmPassword;
+
+  void toggleNewPassword() {
+    _showNewPassword = !_showNewPassword;
+    update();
+  }
+
+  void toggleConfirmPassword() {
+    _showConfirmPassword = !_showConfirmPassword;
     update();
   }
 }

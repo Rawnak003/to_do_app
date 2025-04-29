@@ -22,7 +22,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordTEController = TextEditingController();
   final LoginController _loginController = Get.find<LoginController>();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool obscurePassword = true;
 
   void _onTapLogin() {
     if (_formKey.currentState!.validate()) {
@@ -105,20 +104,21 @@ class _LoginScreenState extends State<LoginScreen> {
                       builder: (controller) {
                         return TextFormField(
                           controller: _passwordTEController,
-                          obscureText: controller.obscurePassword,
+                          obscureText: !controller.showConfirmPassword,
                           obscuringCharacter: '*',
                           decoration: InputDecoration(
                             hintText: AppStrings.password,
                             suffixIcon: IconButton(
                               icon: Icon(
-                                controller.obscurePassword
+                                controller.showConfirmPassword
                                     ? Icons.visibility
                                     : Icons.visibility_off_outlined,
-                                color: controller.obscurePassword
-                                    ? AppColor.primaryColor
-                                    : AppColor.greyColor,
+                                color:
+                                controller.showConfirmPassword
+                                        ? AppColor.primaryColor
+                                        : AppColor.greyColor,
                               ),
-                              onPressed: controller.toggleObscure,
+                              onPressed: controller.toggleConfirmPassword,
                             ),
                           ),
                           validator: (String? value) {
