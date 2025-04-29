@@ -45,11 +45,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _passwordTEController.text,
     );
     if (isRegisterSuccess) {
-      Utils.toastMessage("Registration Successful!");
+      Utils.toastMessage(_registerController.message!);
       _allClear();
       Get.offAllNamed(RoutesName.login);
     } else {
-      Utils.toastMessage("Registration Failed!");
+      Utils.toastMessage(_registerController.message!);
     }
   }
 
