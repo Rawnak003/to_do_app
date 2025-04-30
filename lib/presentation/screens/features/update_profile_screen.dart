@@ -1,16 +1,14 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/spacing.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
 import 'package:to_do_application/data/models/user_model.dart';
-import 'package:to_do_application/data/services/network_client.dart';
-import 'package:to_do_application/data/services/network_response.dart';
-import 'package:to_do_application/data/utils/app_urls.dart';
 import 'package:to_do_application/presentation/controllers/auth_controller.dart';
+import 'package:to_do_application/presentation/controllers/image_picker_controller.dart';
+import 'package:to_do_application/presentation/controllers/user_password_update_controller.dart';
+import 'package:to_do_application/presentation/controllers/user_profile_update_controller.dart';
 import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/custom_app_bar.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
@@ -27,127 +25,72 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
   final TextEditingController _firstNameTEController = TextEditingController();
   final TextEditingController _lastNameTEController = TextEditingController();
   final TextEditingController _phoneTEController = TextEditingController();
-  final TextEditingController _oldPasswordTEController = TextEditingController();
-  final TextEditingController _newPasswordTEController = TextEditingController();
+  final TextEditingController _oldPasswordTEController =
+      TextEditingController();
+  final TextEditingController _newPasswordTEController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey1 = GlobalKey<FormState>();
   final GlobalKey<FormState> _formKey2 = GlobalKey<FormState>();
-  bool userDetailsUpdateInProgress1 = false;
-  bool userDetailsUpdateInProgress2 = false;
+  final ImagePickerController _photoController =
+      Get.find<ImagePickerController>();
 
-  final ImagePicker _imagePicker = ImagePicker();
-  XFile? _pickedImage;
+  final UserProfileUpdateController _userProfileUpdateController =
+      Get.find<UserProfileUpdateController>();
+  final UserPasswordUpdateController _userPasswordUpdateController =
+      Get.find<UserPasswordUpdateController>();
 
   _onTapUpdateDetailsButton() {
-    if(_formKey1.currentState!.validate()) {
+    if (_formKey1.currentState!.validate()) {
       _userProfileUpdate();
     }
   }
 
   _onTapUpdatePasswordButton() {
-    if(_formKey2.currentState!.validate()) {
+    if (_formKey2.currentState!.validate()) {
       _updatePassword();
     }
   }
 
   Future<void> _userProfileUpdate() async {
-    if (!mounted) return;
-    setState(() {
-      userDetailsUpdateInProgress1 = true;
-    });
-
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _phoneTEController.text.trim(),
-    };
-
-    if (_pickedImage != null) {
-      List<int> imageBytes = await _pickedImage!.readAsBytes();
-      String encodedImage = base64Encode(imageBytes);
-      requestBody["photo"] = encodedImage;
-    }
-
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: AppURLs.profileUpdateURL,
-      body: requestBody,
-    );
-
-    if (!mounted) return;
-    setState(() {
-      userDetailsUpdateInProgress1 = false;
-    });
-
-    if (response.isSuccess) {
-      await AuthController.saveUpdatedUserDetailsToPrefsWithoutPassword(requestBody);
+    final bool isSuccessful = await _userProfileUpdateController
+        .userProfileUpdate(
+          _emailTEController.text.trim(),
+          _firstNameTEController.text.trim(),
+          _lastNameTEController.text.trim(),
+          _phoneTEController.text.trim(),
+          _photoController,
+        );
+    if (isSuccessful) {
       Get.back(result: true);
-      Utils.toastMessage("Update Successful!");
+      Utils.toastMessage(_userProfileUpdateController.message!);
     } else {
-      Utils.toastMessage("Update Failed!");
+      Utils.toastMessage(_userProfileUpdateController.message!);
     }
   }
 
   Future<void> _updatePassword() async {
-    if (!mounted) return;
-    setState(() {
-      userDetailsUpdateInProgress2 = true;
-    });
-
-    Map<String, dynamic> requestBody = {
-      "email": _emailTEController.text.trim(),
-      "firstName": _firstNameTEController.text.trim(),
-      "lastName": _lastNameTEController.text.trim(),
-      "mobile": _phoneTEController.text.trim(),
-    };
-
-    if (_pickedImage != null) {
-      List<int> imageBytes = await _pickedImage!.readAsBytes();
-      String encodedImage = base64Encode(imageBytes);
-      requestBody["photo"] = encodedImage;
-    }
-
-    if (_oldPasswordTEController.text.isNotEmpty && _newPasswordTEController.text.isNotEmpty) {
-      String? userOldPassword = await AuthController.getUserPass();
-
-      if (_oldPasswordTEController.text != userOldPassword) {
-        Utils.snackBar("Old password is incorrect! Please try again.", context);
-        setState(() {
-          userDetailsUpdateInProgress2 = false;
-        });
-        return;
-      }
-
-      if (_oldPasswordTEController.text == _newPasswordTEController.text) {
-        Utils.snackBar("Same as old password! Please try a different password.", context);
-        setState(() {
-          userDetailsUpdateInProgress2 = false;
-        });
-        return;
-      }
-
-      requestBody["password"] = _newPasswordTEController.text;
-    }
-
-
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: AppURLs.profileUpdateURL,
-      body: requestBody,
+    final bool isSuccessful = await _userPasswordUpdateController.userPasswordUpdate(
+      _emailTEController.text.trim(),
+      _firstNameTEController.text.trim(),
+      _lastNameTEController.text.trim(),
+      _phoneTEController.text.trim(),
+      _photoController,
+      _oldPasswordTEController.text.trim(),
+      _newPasswordTEController.text.trim(),
     );
 
-    if (!mounted) return;
-    setState(() {
-      userDetailsUpdateInProgress2 = false;
-    });
-
-    if (response.isSuccess) {
-      await AuthController.saveUpdatedUserDetailsToPrefsWithPassword(requestBody);
+    if (isSuccessful) {
       Get.back(result: true);
       _oldPasswordTEController.clear();
       _newPasswordTEController.clear();
-      Utils.toastMessage("Password Update Successful!");
+      Utils.toastMessage(_userPasswordUpdateController.message!);
     } else {
-      Utils.toastMessage("Password Update Failed!");
+      Utils.toastMessage(_userPasswordUpdateController.message!);
     }
+  }
+
+  void _onTapPhotoPicker() {
+    _photoController.pickImage();
   }
 
   @override
@@ -165,7 +108,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColor.backgroundColor,
-        appBar: CustomAppBar(fromProfile: true,),
+        appBar: CustomAppBar(fromProfile: true),
         body: ScreenBackground(
           child: Padding(
             padding: const EdgeInsets.all(32.0),
@@ -183,7 +126,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         children: [
                           Text(
                             AppStrings.updateProfile,
-                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 26),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineMedium?.copyWith(fontSize: 26),
                           ),
                           const SizedBox(height: 28),
                           _buildPhotoPickerWidget(context),
@@ -193,7 +138,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                             enabled: false,
                             keyboardType: TextInputType.emailAddress,
                             controller: _emailTEController,
-                            decoration: InputDecoration(hintText: AppStrings.email),
+                            decoration: InputDecoration(
+                              hintText: AppStrings.email,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           TextFormField(
@@ -208,7 +155,8 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               }
                               return null;
                             },
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                           ),
                           const SizedBox(height: 10),
                           TextFormField(
@@ -223,41 +171,54 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               }
                               return null;
                             },
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                           ),
                           const SizedBox(height: 10),
                           TextFormField(
                             keyboardType: TextInputType.phone,
                             controller: _phoneTEController,
-                            decoration: InputDecoration(hintText: AppStrings.phone),
+                            decoration: InputDecoration(
+                              hintText: AppStrings.phone,
+                            ),
                             validator: (String? value) {
                               String phone = value?.trim() ?? '';
-                              RegExp regExp = RegExp(r'^(?:\+8801|01)[3-9]\d{8}$');
+                              RegExp regExp = RegExp(
+                                r'^(?:\+8801|01)[3-9]\d{8}$',
+                              );
                               if (regExp.hasMatch(phone) == false) {
                                 return 'Please enter valid phone number';
                               }
                               return null;
                             },
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                           ),
                           const SizedBox(height: 15),
-                          Visibility(
-                            visible: userDetailsUpdateInProgress1 == false,
-                            replacement: const CenterCircularIndicatorWidget(),
-                            child: ElevatedButton(
-                              onPressed: () => _onTapUpdateDetailsButton(),
-                              child: const Icon(
-                                Icons.arrow_circle_right_outlined,
-                                size: 32,
-                                color: AppColor.whiteColor,
-                              ),
-                            ),
+                          GetBuilder<UserProfileUpdateController>(
+                            builder: (controller) {
+                              return Visibility(
+                                visible:
+                                    controller.userDetailsUpdateInProgress ==
+                                    false,
+                                replacement:
+                                    const CenterCircularIndicatorWidget(),
+                                child: ElevatedButton(
+                                  onPressed: () => _onTapUpdateDetailsButton(),
+                                  child: const Icon(
+                                    Icons.arrow_circle_right_outlined,
+                                    size: 32,
+                                    color: AppColor.whiteColor,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Divider(color: AppColor.greyColor, thickness: 1,),
+                    Divider(color: AppColor.greyColor, thickness: 1),
                     const SizedBox(height: 10),
                     Form(
                       key: _formKey2,
@@ -267,7 +228,9 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                         children: [
                           Text(
                             AppStrings.updatePassword,
-                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontSize: 26),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.headlineMedium?.copyWith(fontSize: 26),
                           ),
                           const SizedBox(height: 28),
                           TextFormField(
@@ -277,12 +240,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               hintText: AppStrings.oldPassword,
                             ),
                             validator: (String? value) {
-                              if ((value?.isEmpty ?? true) || (value!.length < 6)) {
+                              if ((value?.isEmpty ?? true) ||
+                                  (value!.length < 6)) {
                                 return 'Please enter password with at least 6 letters';
                               }
                               return null;
                             },
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                           ),
                           const SizedBox(height: 10),
                           TextFormField(
@@ -291,25 +256,31 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                               hintText: AppStrings.newPassword,
                             ),
                             validator: (String? value) {
-                              if ((value?.isEmpty ?? true) || (value!.length < 6)) {
+                              if ((value?.isEmpty ?? true) ||
+                                  (value!.length < 6)) {
                                 return 'Please enter password with at least 6 letters';
                               }
                               return null;
                             },
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
                           ),
                           const SizedBox(height: 15),
-                          Visibility(
-                            visible: userDetailsUpdateInProgress2 == false,
-                            replacement: const CenterCircularIndicatorWidget(),
-                            child: ElevatedButton(
-                              onPressed: () => _onTapUpdatePasswordButton(),
-                              child: const Icon(
-                                Icons.arrow_circle_right_outlined,
-                                size: 32,
-                                color: AppColor.whiteColor,
-                              ),
-                            ),
+                          GetBuilder<UserPasswordUpdateController>(
+                            builder: (controller) {
+                              return Visibility(
+                                visible: controller.userPasswordUpdateInProgress == false,
+                                replacement: const CenterCircularIndicatorWidget(),
+                                child: ElevatedButton(
+                                  onPressed: () => _onTapUpdatePasswordButton(),
+                                  child: const Icon(
+                                    Icons.arrow_circle_right_outlined,
+                                    size: 32,
+                                    color: AppColor.whiteColor,
+                                  ),
+                                ),
+                              );
+                            }
                           ),
                         ],
                       ),
@@ -357,25 +328,20 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
               ),
             ),
             const SizedBox(width: 10),
-            Text(
-              _pickedImage?.name ?? AppStrings.selectPhoto,
-              style: TextStyle(
-                fontSize: 16,
-                color: AppColor.greyColor,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
+            Obx(() {
+              final pickedImage = _photoController.pickedImage.value;
+              return Text(
+                pickedImage?.name ?? AppStrings.selectPhoto,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColor.greyColor,
+                  fontWeight: FontWeight.w400,
+                ),
+              );
+            }),
           ],
         ),
       ),
     );
-  }
-
-  Future<void> _onTapPhotoPicker() async {
-    XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      _pickedImage = image;
-      setState(() {});
-    }
   }
 }
