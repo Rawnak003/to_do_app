@@ -3,9 +3,7 @@ import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/constants/strings.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
-import 'package:to_do_application/data/services/network_client.dart';
-import 'package:to_do_application/data/services/network_response.dart';
-import 'package:to_do_application/data/utils/app_urls.dart';
+import 'package:to_do_application/presentation/controllers/add_task_controller.dart';
 import 'package:to_do_application/presentation/widgets/center_circular_indicator_widget.dart';
 import 'package:to_do_application/presentation/widgets/custom_app_bar.dart';
 import 'package:to_do_application/presentation/widgets/screen_background.dart';
@@ -18,13 +16,12 @@ class AddTaskScreen extends StatefulWidget {
 }
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
-
   final TextEditingController _taskTEController = TextEditingController();
-  final TextEditingController _taskDescriptionTEController = TextEditingController();
+  final TextEditingController _taskDescriptionTEController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  bool addNewTaskInProgress = false;
   final AutovalidateMode _autoValidateMode = AutovalidateMode.onUnfocus;
-
+  final AddTaskController _addTaskController = Get.find<AddTaskController>();
 
   @override
   void dispose() {
@@ -35,36 +32,19 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
 
   void _onTapSubmitButton() {
     FocusScope.of(context).unfocus();
-    if(_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.validate()) {
       _addNewTask();
     }
   }
 
   Future<void> _addNewTask() async {
-    if (!mounted) return;
-    setState(() {
-      addNewTaskInProgress = true;
-    });
-
-    Map<String, dynamic> requestBody = {
-      "title": _taskTEController.text.trim(),
-      "description": _taskDescriptionTEController.text.trim(),
-      "status": "New"
-    };
-
-    NetworkResponse response = await NetworkClient.postRequest(
-      url: AppURLs.addNewTaskURL,
-      body: requestBody,
+    final bool isTaskAdded = await _addTaskController.addTask(
+      _taskTEController.text.trim(),
+      _taskDescriptionTEController.text.trim(),
     );
-
-    if (!mounted) return;
-    setState(() {
-      addNewTaskInProgress = false;
-    });
-
-    if (response.isSuccess) {
+    if (isTaskAdded) {
       _allCLear();
-      FocusScope.of(context).unfocus();
+      Get.focusScope?.unfocus();
       Get.back(result: true);
       Utils.toastMessage("New Task Added!");
     } else {
@@ -119,7 +99,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       controller: _taskDescriptionTEController,
                       decoration: InputDecoration(
                         hintText: AppStrings.taskDescription,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                       ),
                       validator: (String? value) {
                         if (value?.trim().isEmpty ?? true) {
@@ -129,18 +112,22 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                       },
                     ),
                     const SizedBox(height: 25),
-                    Visibility(
-                      visible: addNewTaskInProgress == false,
-                      replacement: const CenterCircularIndicatorWidget(),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _onTapSubmitButton();
-                        },
-                        child: Text(
-                          AppStrings.addTask,
-                          style: Theme.of(context).textTheme.titleMedium,
-                        ),
-                      ),
+                    GetBuilder<AddTaskController>(
+                      builder: (controller) {
+                        return Visibility(
+                          visible: controller.addTaskInProgress == false,
+                          replacement: const CenterCircularIndicatorWidget(),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              _onTapSubmitButton();
+                            },
+                            child: Text(
+                              AppStrings.addTask,
+                              style: Theme.of(context).textTheme.titleMedium,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ],
                 ),
