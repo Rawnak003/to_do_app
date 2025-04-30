@@ -5,11 +5,10 @@ import 'package:to_do_application/core/routes/routes_name.dart';
 import 'package:to_do_application/core/utils/util_message.dart';
 import 'package:to_do_application/data/models/task_count_list_model.dart';
 import 'package:to_do_application/data/models/task_count_model.dart';
-import 'package:to_do_application/data/models/task_list_model.dart';
-import 'package:to_do_application/data/models/task_model.dart';
 import 'package:to_do_application/data/services/network_client.dart';
 import 'package:to_do_application/data/services/network_response.dart';
 import 'package:to_do_application/data/utils/app_urls.dart';
+import 'package:to_do_application/presentation/controllers/new_task_list_controller.dart';
 import 'package:to_do_application/presentation/widgets/details_show_card__widget.dart';
 import 'package:to_do_application/presentation/widgets/task_card_widget.dart';
 
@@ -23,8 +22,7 @@ class NewTaskScreen extends StatefulWidget {
 class _NewTaskScreenState extends State<NewTaskScreen> {
   bool _getTaskCountInProgress = false;
   List<TaskCountModel> _taskCountList = [];
-  bool _getNewTaskListInProgress = false;
-  List<TaskModel> _newTaskList = [];
+  final NewTaskListController _newTaskListController = Get.find<NewTaskListController>();
   final ScrollController _scrollController = ScrollController();
   bool _showFAB = true;
 
@@ -72,31 +70,14 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Future<void> _getNewTaskList() async {
-    if (!mounted) return;
-    setState(() {
-      _getNewTaskListInProgress = true;
-    });
-
-    final NetworkResponse response = await NetworkClient.getRequest(
-      url: AppURLs.taskListURL('New'),
-    );
-
-    if (response.isSuccess) {
-      TaskListModel taskListModel = TaskListModel.fromJson(response.data ?? {});
-      _newTaskList = taskListModel.taskList;
-    } else {
-      Utils.snackBar(response.message, context);
+    final bool isSuccessful = await _newTaskListController.getNewTaskList();
+    if (!isSuccessful) {
+      Get.snackbar("Error", _newTaskListController.message!);
     }
-
-    if (!mounted) return;
-    setState(() {
-      _getNewTaskListInProgress = false;
-    });
   }
 
   Future<void> _onTapAddTask() async {
     final isAdded = await Get.toNamed(RoutesName.addTask);
-
     if (isAdded == true) {
       setState(() {
         _getNewTaskList();
@@ -137,30 +118,34 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
               child: _taskStatusCountShow(),
             ),
             const SizedBox(height: 5),
-            Visibility(
-              visible: _getNewTaskListInProgress == false,
-              replacement: Padding(
-                padding: const EdgeInsets.only(top: 300),
-                child: Center(child: const CircularProgressIndicator()),
-              ),
-              child: Expanded(
-                child: ListView.separated(
-                  controller: _scrollController,
-                  itemCount: _newTaskList.length,
-                  itemBuilder:
-                      (context, index) => TaskCard(
-                        title: _newTaskList[index].title,
-                        subtitle: _newTaskList[index].description,
-                        date: _newTaskList[index].createdDate,
-                        status: TaskStatus.newTask,
-                        index: index,
-                        taskId: _newTaskList[index].id,
-                        refreshList: _getNewTaskList,
-                        refreshStatusCount: _getAllTaskStatusCount,
-                      ),
-                  separatorBuilder: (context, index) => const SizedBox(height: 2),
-                ),
-              ),
+            GetBuilder<NewTaskListController>(
+              builder: (controller) {
+                return Visibility(
+                  visible: controller.getNewTaskListInProgress == false,
+                  replacement: Padding(
+                    padding: const EdgeInsets.only(top: 300),
+                    child: Center(child: const CircularProgressIndicator()),
+                  ),
+                  child: Expanded(
+                    child: ListView.separated(
+                      controller: _scrollController,
+                      itemCount: controller.newTaskList.length,
+                      itemBuilder:
+                          (context, index) => TaskCard(
+                            title: controller.newTaskList[index].title,
+                            subtitle: controller.newTaskList[index].description,
+                            date: controller.newTaskList[index].createdDate,
+                            status: TaskStatus.newTask,
+                            index: index,
+                            taskId: controller.newTaskList[index].id,
+                            refreshList: _getNewTaskList,
+                            refreshStatusCount: _getAllTaskStatusCount,
+                          ),
+                      separatorBuilder: (context, index) => const SizedBox(height: 2),
+                    ),
+                  ),
+                );
+              }
             ),
           ],
         ),
