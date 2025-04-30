@@ -2,13 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:to_do_application/core/constants/colors.dart';
 import 'package:to_do_application/core/routes/routes_name.dart';
-import 'package:to_do_application/core/utils/util_message.dart';
-import 'package:to_do_application/data/models/task_count_list_model.dart';
-import 'package:to_do_application/data/models/task_count_model.dart';
-import 'package:to_do_application/data/services/network_client.dart';
-import 'package:to_do_application/data/services/network_response.dart';
-import 'package:to_do_application/data/utils/app_urls.dart';
 import 'package:to_do_application/presentation/controllers/new_task_list_controller.dart';
+import 'package:to_do_application/presentation/controllers/task_status_count_list_controller.dart';
 import 'package:to_do_application/presentation/widgets/details_show_card__widget.dart';
 import 'package:to_do_application/presentation/widgets/task_card_widget.dart';
 
@@ -20,8 +15,7 @@ class NewTaskScreen extends StatefulWidget {
 }
 
 class _NewTaskScreenState extends State<NewTaskScreen> {
-  bool _getTaskCountInProgress = false;
-  List<TaskCountModel> _taskCountList = [];
+  final TaskStatusCountListController _taskStatusCountListController = Get.find<TaskStatusCountListController>();
   final NewTaskListController _newTaskListController = Get.find<NewTaskListController>();
   final ScrollController _scrollController = ScrollController();
   bool _showFAB = true;
@@ -45,28 +39,10 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Future<void> _getAllTaskStatusCount() async {
-    if (!mounted) return;
-    setState(() {
-      _getTaskCountInProgress = true;
-    });
-
-    final NetworkResponse response = await NetworkClient.getRequest(
-      url: AppURLs.taskStatusCountURL,
-    );
-
-    if (response.isSuccess) {
-      TaskCountListModel taskCountListModel = TaskCountListModel.fromJson(
-        response.data ?? {},
-      );
-      _taskCountList = taskCountListModel.countList;
-    } else {
-      Utils.snackBar(response.message, context);
+    final bool isSuccessful = await _taskStatusCountListController.getAllTaskStatusCount();
+    if (!isSuccessful) {
+      Get.snackbar("Error", _taskStatusCountListController.message!);
     }
-
-    if (!mounted) return;
-    setState(() {
-      _getTaskCountInProgress = false;
-    });
   }
 
   Future<void> _getNewTaskList() async {
@@ -109,13 +85,17 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
-            Visibility(
-              visible: _getTaskCountInProgress == false,
-              replacement: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Center(child: const CircularProgressIndicator()),
-              ),
-              child: _taskStatusCountShow(),
+            GetBuilder<TaskStatusCountListController>(
+              builder: (controller) {
+                return Visibility(
+                  visible: controller.getTaskCountInProgress == false,
+                  replacement: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Center(child: const CircularProgressIndicator()),
+                  ),
+                  child: _taskStatusCountShow(),
+                );
+              }
             ),
             const SizedBox(height: 5),
             GetBuilder<NewTaskListController>(
@@ -154,18 +134,22 @@ class _NewTaskScreenState extends State<NewTaskScreen> {
   }
 
   Widget _taskStatusCountShow() {
-    return SizedBox(
-      height: 100,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: _taskCountList.length,
-        itemBuilder: (context, index) {
-          return DetailsShowCard(
-            title: _taskCountList[index].taskStatus,
-            count: _taskCountList[index].taskCount,
-          );
-        },
-      ),
+    return GetBuilder<TaskStatusCountListController>(
+      builder: (controller) {
+        return SizedBox(
+          height: 100,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: controller.taskCountList.length,
+            itemBuilder: (context, index) {
+              return DetailsShowCard(
+                title: controller.taskCountList[index].taskStatus,
+                count: controller.taskCountList[index].taskCount,
+              );
+            },
+          ),
+        );
+      }
     );
   }
 }
