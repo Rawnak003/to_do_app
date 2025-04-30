@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:to_do_application/presentation/controllers/add_task_controller.dart';
 import 'package:to_do_application/presentation/controllers/cancelled__task_list_controller.dart';
 import 'package:to_do_application/presentation/controllers/completed_task_list_controller.dart';
+import 'package:to_do_application/presentation/controllers/fab_visibility_controller.dart';
 import 'package:to_do_application/presentation/controllers/forget_password_controller.dart';
 import 'package:to_do_application/presentation/controllers/forget_password_pin_verify_controller.dart';
 import 'package:to_do_application/presentation/controllers/login_controller.dart';
@@ -23,6 +24,7 @@ class ControllerBinder extends Bindings{
     Get.put(ResetPasswordController());
     Get.put(ShowPasswordController());
     Get.put(MainBottomNavController());
+    Get.put(FabVisibilityController());
     Get.put(NewTaskListController());
     Get.put(TaskStatusCountListController());
     Get.put(AddTaskController());
